@@ -1,0 +1,28 @@
+#!/usr/bin/env less
+
+# Course: General Repo
+# File: .gitignore
+# Description: List of patterns/files to ignore (not include in git repository)
+
+# Temporary Files
+**/*~
+**/~$*
+**/*.tmp
+**/tmp/
+
+# Operating System Artifacts
+**/.DS_Store
+**/Thumbs.db*
+**/*:Zone.Identifier
+
+# Development Environment Artifacts
+**/.vscode
+
+# Cacheing
+**/__pycache__/
+
+# Interpreter Bytecode
+**/*.pyc
+
+# Mid-compilation
+**/*.[ao]
