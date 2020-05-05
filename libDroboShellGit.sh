@@ -12,6 +12,10 @@
 # Declare Global Variables
 ## Personalize for User's Drobo
 source droboID.sh  # Contains Drobo system and user identification, not part of repo, expected to be in $PATH
+# Expect following variables to be assigned in droboID.sh
+# - DROBO_GIT_NAME : Name to use as remote for Git; i.e. git remote
+# - DROBO_NET_ID : Network identifier of Drobo, IP address or hostname
+# - DROBO_USERNAME : Username on Drobo to authenticate as for Git commands, typically the Admin (Administrator) user from Drobo Dashboard
 DROBO_REPOS_DIR_PATH="/mnt/DroboFS/repos/"  # Absolute path of directory for Git repos on Drobo
 ## Common Across Drobo
 DROBO_GIT_PACK_DIR_PATH="/mnt/DroboFS/Shares/DroboApps/git/bin/"  # Absolute path of directory for Git binaries on Drobo

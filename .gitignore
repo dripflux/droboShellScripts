@@ -26,3 +26,7 @@
 
 # Mid-compilation
 **/*.[ao]
+
+# DO NOT track as part of project
+## droboID.sh: End-user personalized files for project, confidentiality concern (information leakage)
+droboID.sh
