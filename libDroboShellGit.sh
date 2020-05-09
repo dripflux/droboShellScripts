@@ -3,19 +3,15 @@
 # Author: Drip.Flux
 # Description: Library for common routines related to Drobo Git SCM.
 #   Intended to be sourced by other shell scripts.
+#   Part of droboShellScripts project.
 # Dependencies:
 #   - Drobo Dashboard Admin Account
-#   - Drobo App: Git SCM
-#   - sh: default sh on Drobo, sh compliant on client
-#   - ssh: ssh compliant on Drobo (Drobo App: Dropbear), ssh compliant on client
+#   - Drobo App > Git SCM
+#   - sh : default sh on Drobo, sh compliant on client
+#   - ssh : ssh compliant on Drobo (Drobo App: Dropbear), ssh compliant on client
 
 # Declare Global Variables
 ## Personalize for User's Drobo
-source droboID.sh  # Contains Drobo system and user identification, not part of repo, expected to be in $PATH
-# Expect following variables to be assigned in droboID.sh
-# - DROBO_GIT_NAME : Name to use as remote for Git; i.e. git remote
-# - DROBO_NET_ID : Network identifier of Drobo, IP address or hostname
-# - DROBO_USERNAME : Username on Drobo to authenticate as for Git commands, typically the Admin (Administrator) user from Drobo Dashboard
 DROBO_REPOS_DIR_PATH="/mnt/DroboFS/repos/"  # Absolute path of directory for Git repos on Drobo
 ## Common Across Drobo
 DROBO_GIT_PACK_DIR_PATH="/mnt/DroboFS/Shares/DroboApps/git/bin/"  # Absolute path of directory for Git binaries on Drobo
@@ -29,6 +25,34 @@ function generateRepoURL () {
 	# Return:
 	#   0 : (normal) $DROBO_GIT_URL     Updated
 	#   1 : ERROR:   $DROBO_GIT_URL NOT Updated
+	:  # Placeholder, syntactic NOP
+}
+
+function isInRangeInt () {
+	# Description:
+	# Args:
+	#   ${1) : Minimum integer of range
+	#   ${2} : Maximum integer of range
+	#   #{3} : Integer to test
+	# Return:
+	#   0 :     IN Range
+	#   1 : NOT IN Range
+	#   2 : ERROR: Incorrect Usage
+	# Perform Function
+	case $# in  # Argument count check
+		3 )  # Normal
+			if (( ${3} < ${1} )) ; then
+				return 1
+			fi
+			if (( ${3} > ${2} )) ; then
+				return 1
+			fi
+			;;
+		* )  # ERROR: Incorrect number of arguments
+			return 2
+			;;
+	esac
+	return 0
 }
 
 function isValidDirectoryName () {
@@ -39,6 +63,11 @@ function isValidDirectoryName () {
 	#   0 : VALID   Directory Name
 	#   1 : INVALID Directroy Name
 	#   2 : ERROR: Incorrect Usage
+	isInRangeInt 1 1 $#
+	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
+		return 2
+	fi
+	return 0
 }
 
 function isValidDroboName () {
@@ -49,6 +78,11 @@ function isValidDroboName () {
 	#   0 : VALID   Drobo Name
 	#   1 : INVALID Drobo Name
 	#   2 : ERROR: Incorrect Usage
+	isInRangeInt 1 1 $#
+	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
+		return 2
+	fi
+	return 0
 }
 
 function isValidProtocol () {
@@ -57,6 +91,11 @@ function isValidProtocol () {
 	#   0 : VALID   Protocol
 	#   1 : INVALID Protocol
 	#   2 : ERROR: Incorrect Usage
+	isInRangeInt 1 1 $#
+	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
+		return 2
+	fi
+	return 0
 }
 
 function isValidUsername () {
@@ -67,4 +106,9 @@ function isValidUsername () {
 	#   0 : VALID   Username
 	#   1 : INVALID Username
 	#   2 : ERROR: Incorrect Usage
+	isInRangeInt 1 1 $#
+	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
+		return 2
+	fi
+	return 0
 }
