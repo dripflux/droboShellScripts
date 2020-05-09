@@ -30,7 +30,11 @@ function main () {
 	#   1 : ERROR:   Git repo NOT initialized on local host nor Drobo
 	#   2 : ERROR:   Git repo NOT initialized on local host, but repo initialized on Drobo
 	# Perform Function
-	:  # Place holder NOP for syntacitcal correctness
+	# Use cases (sub-cmds):
+	#   clone  : [2 args] ...
+	#   init   : [2 args] ...
+	#   remote : [2 args] ...
+	:  # Place holder NOP for syntactical correctness
 }
 
 # Call main()
