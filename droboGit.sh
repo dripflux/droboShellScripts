@@ -11,7 +11,7 @@
 #   - $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
 
 # Required Sources
-source libDroboShellGit.sh
+source libDroboGit.sh
 
 # Declare Global Variables
 ## Personalize for User's Drobo
