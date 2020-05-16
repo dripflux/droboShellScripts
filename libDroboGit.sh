@@ -8,7 +8,7 @@
 #   - Drobo Dashboard Admin Account
 #   - Drobo App > Git SCM
 #   - sh : default sh on Drobo, sh compliant on client
-#   - ssh : ssh compliant on Drobo (Drobo App: Dropbear), ssh compliant on client
+#   - ssh : ssh compliant on Drobo (Drobo App > Dropbear), ssh compliant on client
 
 # Declare Global Variables
 ## Personalize for User's Drobo

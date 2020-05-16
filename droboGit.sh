@@ -7,6 +7,7 @@
 #   - Drobo Dashboard Admin Account
 #   - Drobo App > Git SCM
 #   - sh : default sh on Drobo, sh compliant on client
+#   - ssh : ssh compliant on Drobo (Drobo App > Dropbear), ssh compliant on client
 # Expectations:
 #   - $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
 
