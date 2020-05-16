@@ -52,12 +52,23 @@ Dependencies:
 
 *Design Philosophy*
 
-The Git repos created on the Drobo are *bare* repos, this aligns with a Drobo being designed to be used as a file server not development workstations.
-Similarly, there are only three Git simplified sub commands implemented: `init`, `clone`, `remote add`.
+Since a Drobo is designed to be used as a file server not a development workstation the Git repos created by this code base are *bare* repos.
+There are three use cases the code base is designed tp support:
 
-All of the commands implemented are initiated from the local host and use the Drobo as a remote.
+- (init) initializing a new repo on the Drobo;
+- (clone) cloning a repo that already exists on the Drobo; and
+- (remote) creating a new repo on the Drobo from an already existing repo on the host
+
+Those three use cases are mapped to the three `droboGit.sh` sub-commands: `init`, `clone`, and `remote` respectively.
+The three sub-commands are simplified versions of the Git sub-commands: `init`, `clone`, `remote add`.
+
+All of the sub-commands implemented are initiated from the local host and use the Drobo as a remote.
 Communications between the host and the Drobo are via SSH.
 
 The Git repositories on the Drobo are created and managed using the Drobo Dashboard Administrator account.
-Besides initial directory setup on the Drobo which needs `root` privilege to complete, the scripts on the host and the Drobo do not need elevated privileges.
+Besides initial directory setup on the Drobo which needs `root` privilege to complete, the scripts on the host and the Drobo *do not* need elevated privileges.
 The Drobo Dashboard Administrator account is used, but `sudo` is not needed for or used in the scripts.
+
+*Usage*
+
+...
