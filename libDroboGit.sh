@@ -25,7 +25,9 @@ function generateRepoURL () {
 	# Return:
 	#   0 : (normal) $DROBO_GIT_URL     Updated
 	#   1 : ERROR:   $DROBO_GIT_URL NOT Updated
-	:  # Placeholder, syntactic NOP
+	# Perform Function
+	DROBO_GIT_URL="${DROBO_GIT_PROTOCOL}://${DROBO_USERNAME}@${DROBO_NET_ID}${DROBO_GIT_DIR}.git"
+	return 0
 }
 
 function isInRangeInt () {
@@ -63,10 +65,17 @@ function isValidDirectoryName () {
 	#   0 : VALID   Directory Name
 	#   1 : INVALID Directroy Name
 	#   2 : ERROR: Incorrect Usage
+	# Perform Function
+	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 		return 2
 	fi
+	# Validate Directory Name
+	### No PATH Traversal
+	:  # Placeholder, syntactic NOP
+	### No Command Exec
+	:  # Placeholder, syntactic NOP
 	return 0
 }
 
@@ -78,10 +87,39 @@ function isValidDroboName () {
 	#   0 : VALID   Drobo Name
 	#   1 : INVALID Drobo Name
 	#   2 : ERROR: Incorrect Usage
+	# Perform Function
+	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 		return 2
 	fi
+	# Validate Drobo Name
+	## No PATH Traversal
+	:  # Placeholder, syntactic NOP
+	## No Command Exec
+	:  # Placeholder, syntactic NOP
+	return 0
+}
+
+function isValidDroboNetID () {
+	# Description: Determines if ${1} is a valid Drobo Network Identifier (ID) or not
+	# Args:
+	#   ${1} : Drobo name to validate
+	# Return:
+	#   0 : VALID   Drobo Name
+	#   1 : INVALID Drobo Name
+	#   2 : ERROR: Incorrect Usage
+	# Perform Function
+	## Correct Usage
+	isInRangeInt 1 1 $#
+	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
+		return 2
+	fi
+	# Validate Drobo Network ID
+	## No PATH Traversal
+	:  # Placeholder, syntactic NOP
+	## No Command Exec
+	:  # Placeholder, syntactic NOP
 	return 0
 }
 
@@ -91,10 +129,17 @@ function isValidProtocol () {
 	#   0 : VALID   Protocol
 	#   1 : INVALID Protocol
 	#   2 : ERROR: Incorrect Usage
+	# Perform Function
+	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 		return 2
 	fi
+	## Validate Protocol
+	### No PATH Traversal
+	:  # Placeholder, syntactic NOP
+	### No Command Exec
+	:  # Placeholder, syntactic NOP
 	return 0
 }
 
@@ -106,9 +151,16 @@ function isValidUsername () {
 	#   0 : VALID   Username
 	#   1 : INVALID Username
 	#   2 : ERROR: Incorrect Usage
+	# Perform Function
+	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 		return 2
 	fi
+	## Validate Username
+	### No PATH Traversal
+	:  # Placeholder, syntactic NOP
+	### No Command Exec
+	:  # Placeholder, syntactic NOP
 	return 0
 }
