@@ -25,12 +25,12 @@ To that extent the scripts designed here minimize the elevating to `root` to the
 
 ```
 .
-??? README.md
-??? docs
-?   ??? droboGitShellScripts.drawio
-??? droboGit.sh
-??? droboGitServer.sh
-??? libDroboGit.sh
+|-- docs
+|   \-- droboGitShellScripts.drawio
+|-- README.md
+|-- droboGit.sh
+|-- droboGitServer.sh
+\-- libDroboGit.sh
 ```
 
 ## Sub Projects
