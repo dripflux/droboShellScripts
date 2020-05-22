@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Author: Drip.Flux
 # Description: Library for common routines related to Drobo Git SCM.
@@ -6,17 +6,17 @@
 #   Part of droboShellScripts project.
 # Dependencies:
 #   - Drobo Dashboard Admin Account
-#   - Drobo App > Git SCM
-#   - sh : default sh on Drobo, sh compliant on client
-#   - ssh : ssh compliant on Drobo (Drobo App > Dropbear), ssh compliant on client
+#   - Drobo Apps > Git SCM
+#   - Drobo Apps > Bash : sh (default shell on Drobo) does not support export
+#   - ssh : ssh compliant on Drobo (Drobo Apps > Dropbear), ssh compliant on client
 
 # Declare Global Variables
 ## Personalize for User's Drobo
-DROBO_REPOS_DIR_PATH="/mnt/DroboFS/repos/"  # Absolute path of directory for Git repos on Drobo
+export DROBO_REPOS_DIR_PATH="/mnt/DroboFS/repos/"  # Absolute path of directory for Git repos on Drobo
 ## Common Across Drobo
-DROBO_GIT_PACK_DIR_PATH="/mnt/DroboFS/Shares/DroboApps/git/bin/"  # Absolute path of directory for Git binaries on Drobo
-DROBO_GIT_PROTOCOL="ssh"  # Protocol used to communicate with Git on Drobo
-DROBO_GIT_URL=""  # Generated as part of script
+export DROBO_GIT_PACK_DIR_PATH="/mnt/DroboFS/Shares/DroboApps/git/bin/"  # Absolute path of directory for Git binaries on Drobo
+export DROBO_GIT_PROTOCOL="ssh"  # Protocol used to communicate with Git on Drobo
+export DROBO_GIT_URL=""  # Generated as part of script
 
 function generateRepoURL () {
 	# Description: Generates URL for Git repo on Drobo, updates $DROBO_GIT_URL accordingly
@@ -29,6 +29,7 @@ function generateRepoURL () {
 	DROBO_GIT_URL="${DROBO_GIT_PROTOCOL}://${DROBO_USERNAME}@${DROBO_NET_ID}${DROBO_GIT_DIR}.git"
 	return 0
 }
+export -f generateRepoURL
 
 function isInRangeInt () {
 	# Description:
@@ -56,6 +57,7 @@ function isInRangeInt () {
 	esac
 	return 0
 }
+export -f isInRangeInt
 
 function isValidDirectoryName () {
 	# Description: Determines if ${1} is a valid directory name or not
@@ -78,6 +80,7 @@ function isValidDirectoryName () {
 	:  # Placeholder, syntactic NOP
 	return 0
 }
+export -f isValidDirectoryName
 
 function isValidDroboName () {
 	# Description: Determines if ${1} is a valid Drobo Name or not
@@ -100,6 +103,7 @@ function isValidDroboName () {
 	:  # Placeholder, syntactic NOP
 	return 0
 }
+export -f isValidDroboName
 
 function isValidDroboNetID () {
 	# Description: Determines if ${1} is a valid Drobo Network Identifier (ID) or not
@@ -122,6 +126,7 @@ function isValidDroboNetID () {
 	:  # Placeholder, syntactic NOP
 	return 0
 }
+export -f isValidDroboNetID
 
 function isValidProtocol () {
 	# Description: Determines if ${1} is a valid Git + Drobo protocol or not
@@ -142,6 +147,7 @@ function isValidProtocol () {
 	:  # Placeholder, syntactic NOP
 	return 0
 }
+export -f isValidProtocol
 
 function isValidUsername () {
 	# Description: Determines if ${1} is a valid username or not
@@ -164,3 +170,4 @@ function isValidUsername () {
 	:  # Placeholder, syntactic NOP
 	return 0
 }
+export -f isValidUsername

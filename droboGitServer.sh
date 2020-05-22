@@ -1,12 +1,12 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Author: Drip.Flux
 # Description: Server side (on Drobo) script for creating bare Git repo.
 #   Part of droboShellScripts project.
 # Dependencies:
 #   - Drobo Dashboard Admin Account
-#   - Drobo App > Git SCM
-#   - sh : default sh on Drobo, sh compliant on client
+#   - Drobo Apps > Git SCM
+#   - Drobo Apps > Bash : sh (default shell on Drobo) does not support export
 # Expectations:
 #   - $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
 
@@ -55,7 +55,7 @@ function isValidEnvironment () {
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 		return 1
 	fi
-	if [ ${1} = "help" ] ; then
+	if [[ "${1}" = "help" ]] ; then
 		return 0
 	fi
 	isInRangeInt 2 2 $#

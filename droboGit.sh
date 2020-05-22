@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Author: Drip.Flux
 # Description: Client side (on local host) script for creating bare Git repo on Drobo, and cloning repo on local host.
@@ -6,8 +6,8 @@
 # Dependencies:
 #   - Drobo Dashboard Admin Account
 #   - Drobo App > Git SCM
-#   - sh : default sh on Drobo, sh compliant on client
-#   - ssh : ssh compliant on Drobo (Drobo App > Dropbear), ssh compliant on client
+#   - Drobo Apps > Bash : sh (default shell on Drobo) does not support export
+#   - ssh : ssh compliant on Drobo (Drobo Apps > Dropbear), ssh compliant on client
 # Expectations:
 #   - $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
 
@@ -87,7 +87,7 @@ function isValidEnvironment () {
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 		return 1
 	fi
-	if [ ${1} = "help" ] ; then
+	if [[ "${1}" = "help" ]] ; then
 		return 0
 	fi
 	isInRangeInt 2 2 $#
