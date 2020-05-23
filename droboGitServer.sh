@@ -6,7 +6,7 @@
 # Dependencies:
 #   - Drobo Dashboard Admin Account
 #   - Drobo Apps > Git SCM
-#   - Drobo Apps > Bash : sh (default shell on Drobo) does not support export
+#   - Drobo Apps > Bash : sh (default shell on Drobo) does not support export -f
 # Expectations:
 #   - $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
 

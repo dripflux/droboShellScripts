@@ -7,7 +7,7 @@
 # Dependencies:
 #   - Drobo Dashboard Admin Account
 #   - Drobo Apps > Git SCM
-#   - Drobo Apps > Bash : sh (default shell on Drobo) does not support export
+#   - Drobo Apps > Bash : sh (default shell on Drobo) does not support export -f
 #   - ssh : ssh compliant on Drobo (Drobo Apps > Dropbear), ssh compliant on client
 
 # Declare Global Variables
