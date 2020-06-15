@@ -13,10 +13,13 @@
 # Declare Global Variables
 ## Personalize for User's Drobo
 export DROBO_REPOS_DIR_PATH="/mnt/DroboFS/repos/"  # Absolute path of directory for Git repos on Drobo
+export DROBO_GIT_SCRIPTS_PATH="/mnt/DroboFS/bin:/mnt/DroboFS/bin/include"
 ## Common Across Drobo
-export DROBO_GIT_PACK_DIR_PATH="/mnt/DroboFS/Shares/DroboApps/git/bin/"  # Absolute path of directory for Git binaries on Drobo
+export DROBO_DEFAULT_PATH="/bin:/sbin:/usr/local/bin"
+export DROBO_GIT_PACK_DIR_PATH="/mnt/DroboFS/Shares/DroboApps/git/bin"  # Absolute path of directory for Git binaries on Drobo
 export DROBO_GIT_PROTOCOL="ssh"  # Protocol used to communicate with Git on Drobo
 export DROBO_GIT_URL=""  # Generated as part of script
+export DROBO_ENV_PATH="${DROBO_DEFAULT_PATH}:${DROBO_GIT_SCRIPTS_PATH}"
 
 function generateRepoURL () {
 	# Description: Generates URL for Git repo on Drobo, updates $DROBO_GIT_URL accordingly

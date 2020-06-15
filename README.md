@@ -9,7 +9,7 @@ Design Philosophy Summary:
   - Drobo's are not intended to be used for heavy computation
   - Drobo's are not intended to be used as development workstations
 - Apply [secure design principles](https://web.mit.edu/Saltzer/www/publications/protection/Basic.html)
-  - Apply Priciple of Least Privilege &mdash; don't elevate to `root` when you don't need to
+  - Apply Principle of Least Privilege &mdash; don't elevate to `root` when you don't need to
 
 Drobo products are targeted for small office, home office, and individual professionals (<cite>[Drobo](https://www.drobo.com/), retrieved 11 May 2020</cite>).
 Drobo's are designed to be file servers, specifically SMB.
@@ -61,12 +61,15 @@ There are three use cases the code base is designed tp support:
 
 Those three use cases are mapped to the three `droboGit.sh` sub-commands: `init`, `clone`, and `remote` respectively.
 The three sub-commands are simplified versions of the Git sub-commands: `init`, `clone`, `remote add`.
+As such the implementations of the sub-commands follow the default Git versions without extra options.
+That is `init` will initialize the repo on the local host in the current working directory, as *directory* is an optional argument to `git init`.
+But `clone` will clone the repo into a new directory on the local host named after the repo initialized on the Drobo, just as `git clone` would.
 
 All of the sub-commands implemented are initiated from the local host and use the Drobo as a remote.
 Communications between the host and the Drobo are via SSH.
 
 The Git repositories on the Drobo are created and managed using the Drobo Dashboard Administrator account.
-Besides initial directory setup on the Drobo which needs `root` privilege to complete, the scripts on the host and the Drobo *do not* need elevated privileges.
+Besides initial directory setup on the Drobo which needs `root` privilege to complete, the scripts on the local host and the Drobo *do not* need elevated privileges.
 The Drobo Dashboard Administrator account is used, but `sudo` is not needed for or used in the scripts.
 
 *Usage*

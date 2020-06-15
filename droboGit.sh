@@ -146,11 +146,19 @@ function subcmdClone () {
 		return 4
 	fi
 	## Actions on Drobo
+	echo "[on Drobo]"
 	:  # Placeholder, syntactic NOP
 	## Actions on local host
-	# git clone ${DROBO_GIT_URL} ${2}
-	# Config Drobo (origin) Git pack directory path
-	:  # Placeholder, syntactic NOP
+	echo "[on localhost]"
+	droboGitClone ${1}
+	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
+		return 1
+	fi
+	cd ${1}
+	droboGitConfig origin
+	if (( 0 != ${?} )) ; then  # ERROR: ...
+		return 1
+	fi
 	return 0
 }
 
@@ -170,12 +178,21 @@ function subcmdInit () {
 		return 4
 	fi
 	## Actions on Drobo
-	# ssh to Drobo, call droboGitServer.sh init ${2}
-	:  # Placeholder, syntactic NOP
+	echo "[on Drobo]"
+	droboSSHgitInit ${1}
+	if (( 0 != ${?} )) ; then  # ERROR: ...
+		return 3
+	fi
 	## Actions on local host
-	# git clone ${DROBO_GIT_URL} ${2}
-	# Config Drobo (origin) Git pack directory path
-	:  # Placeholder, syntactic NOP
+	echo "[on localhost]"
+	droboGitClone .
+	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
+		return 1
+	fi
+	droboGitConfig origin
+	if (( 0 != ${?} )) ; then  # ERROR: ...
+		return 1
+	fi
 	return 0
 }
 
@@ -195,13 +212,87 @@ function subcmdRemote () {
 		return 4
 	fi
 	## Actions on Drobo
-	# ssh to Drobo, call droboGitServer.sh init ${2}
-	:  # Placeholder, syntactic NOP
+	echo "[on Drobo]"
+	droboSSHgitInit ${1}
 	## Actions on local host
-	# git remote add ${DROBO_NAME} ${DROBO_GIT_URL}
-	# Config Drobo (${DROBO_NAME}) Git pack directory path
-	# git push --all ${DROBO_NAME}
-	:  # Placeholder, syntactic NOP
+	echo "[on localhost]"
+	git remote add ${DROBO_GIT_NAME} ${DROBO_GIT_URL}
+	droboGitConfig ${DROBO_GIT_NAME}
+	git push --all ${DROBO_GIT_NAME}
+	return 0
+}
+
+function droboSSHgitInit () {
+	# Description: SSH to Drobo, execute droboGitServer.sh
+	# Args:
+	#   ${1} : File system friendly name of repo to initialize on the Drobo
+	# Return:
+	#   0 : (normal) Git repo     setup on Drobo
+	#   2 : ERROR:   Git repo NOT setup on Drobo
+	#   4 : ERROR:   Incorrect sub-command usage
+	# Perform Function
+	## Correct Usage
+	isInRangeInt 1 1 $#
+	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+		return 4
+	fi
+	ssh ${DROBO_USERNAME}@${DROBO_NET_ID} "export PATH=${DROBO_ENV_PATH} && droboGitServer.sh init ${1}"
+	case ${?} in
+		0 )    # Normal return
+			;;
+		255 )  # ERROR: ssh failed
+			echo "ERROR: ssh to Drobo failed" >&2
+			return 2
+			;;
+		* )    # ERROR: droboGitServer.sh failed
+			echo "ERROR: droboGitServer.sh on Drobo failed, exit status: ${?}" >&2
+			return 2
+			;;
+	esac
+	return 0
+}
+
+function droboGitClone () {
+	# Description: Clone repo on Drobo to local host using ssh
+	# Args:
+	#   ${1} : File system friendly name of repo to initialize on the Drobo
+	# Return:
+	#   0 : (normal) Git repo     setup on local host
+	#   1 : ERROR:   Git repo NOT setup on local host
+	#   4 : ERROR:   Incorrect sub-command usage
+	# Perform Function
+	## Correct Usage
+	isInRangeInt 1 1 $#
+	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+		return 4
+	fi
+	git clone -u ${DROBO_GIT_PACK_DIR_PATH}/git-upload-pack ${DROBO_GIT_URL} ${1}
+	if (( 0 != ${?} )) ; then  # ERROR: Failed to clone repo from Drobo
+		echo "ERROR: Failed to clone repo from Drobo" >&2
+		return 1
+	fi
+	return 0
+}
+
+function droboGitConfig () {
+	# Description:
+	# Args:
+	#   ${1} : Name of remote in Git for Drobo
+	# Return:
+	#   0 : (normal) Git repo     setup on local host
+	#   1 : ERROR:   Git repo NOT setup on local host
+	#   4 : ERROR:   Incorrect sub-command usage
+	# Perform Function
+	## Correct Usage
+	isInRangeInt 1 1 $#
+	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+		return 4
+	fi
+	git config remote.${1}.uploadpack ${DROBO_GIT_PACK_DIR_PATH}/git-upload-pack && git config remote.${1}.receivepack ${DROBO_GIT_PACK_DIR_PATH}/git-receive-pack
+	if (( 0 != ${?} )) ; then  # ERROR: Failed to configure repo on local host
+		echo "ERROR: Failed to configure repo on local host" >&2
+		return 1
+	fi
 	return 0
 }
 
