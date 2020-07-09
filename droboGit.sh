@@ -41,6 +41,7 @@ function main () {
 	## Validate Environment
 	isValidEnvironment ${@}
 	if (( 0 != ${?} )) ; then  # Invalid environment
+		usage
 		return 4
 	fi
 	## Perform sub-command

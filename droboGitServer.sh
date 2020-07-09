@@ -28,6 +28,7 @@ function main () {
 	## Validate Environment
 	isValidEnvironment ${@}
 	if (( 0 != ${?} )) ; then  # Invalid environment
+		usage
 		return 4
 	fi
 	## Perform sub-command
@@ -42,6 +43,17 @@ function main () {
 			;;
 	esac
 	return ${?}
+}
+
+function usage () {
+	# Description: Output usage statement
+	# Args:
+	#   (none)
+	# Return:
+	#   (none)
+	# Perform Function
+	echo "droboGitServer.sh <help|init>"
+	return 0
 }
 
 function isValidEnvironment () {
