@@ -24,7 +24,7 @@ function main () {
 	#   1 : ERROR:   Git repo NOT setup on Drobo
 	#   2 : (help)   Git repo NOT setup on Drobo
 	#   4 : ERROR:   Incorrect [sub-command] usage, or invalid environment
-	# Perform Function
+
 	## Validate Environment
 	isValidEnvironment ${@}
 	if (( 0 != ${?} )) ; then  # Invalid environment
@@ -51,7 +51,7 @@ function usage () {
 	#   (none)
 	# Return:
 	#   (none)
-	# Perform Function
+
 	echo "droboGitServer.sh <help|init>"
 	return 0
 }
@@ -63,6 +63,7 @@ function isValidEnvironment () {
 	# Return:
 	#   0 : VALID   environment
 	#   1 : INVALID environment
+
 	isInRangeInt 1 2 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 		return 1

@@ -28,7 +28,7 @@ function generateRepoURL () {
 	# Return:
 	#   0 : (normal) $DROBO_GIT_URL     Updated
 	#   1 : ERROR:   $DROBO_GIT_URL NOT Updated
-	# Perform Function
+
 	DROBO_GIT_URL="${DROBO_GIT_PROTOCOL}://${DROBO_USERNAME}@${DROBO_NET_ID}${DROBO_GIT_DIR}.git"
 	return 0
 }
@@ -44,7 +44,7 @@ function isInRangeInt () {
 	#   0 :     IN Range
 	#   1 : NOT IN Range
 	#   2 : ERROR: Incorrect Usage
-	# Perform Function
+
 	case $# in  # Argument count check
 		3 )  # Normal
 			if (( ${3} < ${1} )) ; then
@@ -70,7 +70,7 @@ function isValidDirectoryName () {
 	#   0 : VALID   Directory Name
 	#   1 : INVALID Directroy Name
 	#   2 : ERROR: Incorrect Usage
-	# Perform Function
+
 	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
@@ -93,7 +93,7 @@ function isValidDroboName () {
 	#   0 : VALID   Drobo Name
 	#   1 : INVALID Drobo Name
 	#   2 : ERROR: Incorrect Usage
-	# Perform Function
+
 	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
@@ -116,7 +116,7 @@ function isValidDroboNetID () {
 	#   0 : VALID   Drobo Name
 	#   1 : INVALID Drobo Name
 	#   2 : ERROR: Incorrect Usage
-	# Perform Function
+
 	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
@@ -137,7 +137,7 @@ function isValidProtocol () {
 	#   0 : VALID   Protocol
 	#   1 : INVALID Protocol
 	#   2 : ERROR: Incorrect Usage
-	# Perform Function
+
 	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
@@ -160,7 +160,7 @@ function isValidUsername () {
 	#   0 : VALID   Username
 	#   1 : INVALID Username
 	#   2 : ERROR: Incorrect Usage
-	# Perform Function
+
 	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments

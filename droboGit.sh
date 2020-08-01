@@ -37,7 +37,7 @@ function main () {
 	#   help   : [1-2 args] ...
 	#   init   : [2 args] ...
 	#   remote : [2 args] ...
-	# Perform Function
+
 	## Validate Environment
 	isValidEnvironment ${@}
 	if (( 0 != ${?} )) ; then  # Invalid environment
@@ -72,7 +72,7 @@ function usage () {
 	#   (none)
 	# Return:
 	#   (none)
-	# Perform Function
+
 	echo "droboGit.sh <clone|help|init|remote>"
 	return 0
 }
@@ -140,7 +140,7 @@ function subcmdClone () {
 	#   1 : ERROR:   Git repo NOT setup on local host, but repo     found on Drobo
 	#   3 : ERROR:   Git repo NOT setup on local host, and repo NOT found on Drobo
 	#   4 : ERROR:   Incorrect sub-command usage
-	# Perform Function
+
 	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
@@ -172,7 +172,7 @@ function subcmdInit () {
 	#   1 : ERROR:   Git repo NOT setup on local host, but repo     setup on Drobo
 	#   3 : ERROR:   Git repo NOT setup on local host, and repo NOT setup on Drobo
 	#   4 : ERROR:   Incorrect sub-command usage
-	# Perform Function
+
 	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
@@ -196,7 +196,7 @@ function subcmdInit () {
 	fi
 	droboGitConfig origin
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
-		return ${?}
+		return 1
 	fi
 	return 0
 }
@@ -210,7 +210,7 @@ function subcmdRemote () {
 	#   2 : ERROR:   Git repo     setup on local host, but repo NOT setup on Drobo
 	#   3 : ERROR:   Git repo NOT setup on local host, and repo NOT setup on Drobo
 	#   4 : ERROR:   Incorrect sub-command usage
-	# Perform Function
+
 	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
@@ -219,11 +219,23 @@ function subcmdRemote () {
 	## Actions on Drobo
 	echo "[on Drobo]"
 	droboSSHgitInit ${1}
+	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
+		return 3
+	fi
 	## Actions on local host
 	echo "[on localhost]"
 	git remote add ${DROBO_GIT_NAME} ${DROBO_GIT_URL}
+	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
+		return 1
+	fi
 	droboGitConfig ${DROBO_GIT_NAME}
+	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
+		return 1
+	fi
 	git push --all ${DROBO_GIT_NAME}
+	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
+		return 1
+	fi
 	return 0
 }
 
@@ -235,7 +247,7 @@ function droboSSHgitInit () {
 	#   0 : (normal) Git repo     setup on Drobo
 	#   2 : ERROR:   Git repo NOT setup on Drobo
 	#   4 : ERROR:   Incorrect sub-command usage
-	# Perform Function
+
 	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
@@ -265,7 +277,7 @@ function droboGitClone () {
 	#   0 : (normal) Git repo     setup on local host
 	#   1 : ERROR:   Git repo NOT setup on local host
 	#   4 : ERROR:   Incorrect sub-command usage
-	# Perform Function
+
 	## Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
