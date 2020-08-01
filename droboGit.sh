@@ -190,11 +190,7 @@ function subcmdInit () {
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
-	git remote add origin ${DROBO_GIT_URL}
-	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
-		return 1
-	fi
-	droboGitConfig origin
+	droboGitRemoteAddConfig origin
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
@@ -224,17 +220,13 @@ function subcmdRemote () {
 	fi
 	## Actions on local host
 	echo "[on localhost]"
-	git remote add ${DROBO_GIT_NAME} ${DROBO_GIT_URL}
-	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
-		return 1
-	fi
-	droboGitConfig ${DROBO_GIT_NAME}
+	droboGitRemoteAddConfig ${DROBO_GIT_NAME}
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
 	git push --all ${DROBO_GIT_NAME}
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
-		return 1
+		return 3
 	fi
 	return 0
 }
@@ -291,7 +283,7 @@ function droboGitClone () {
 	return 0
 }
 
-function droboGitRemoteSetupAndSync () {
+function droboGitRemoteAddConfig () {
 	# Description:
 	# Args:
 	#   ${1} : Name of remote in Git for Drobo
@@ -300,7 +292,20 @@ function droboGitRemoteSetupAndSync () {
 	#   1 : ERROR:   Git repo NOT setup on local host
 	#   4 : ERROR:   Incorrect sub-command usage
 
-	:
+	## Correct Usage
+	isInRangeInt 1 1 $#
+	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+		return 4
+	fi
+	git remote add ${1} ${DROBO_GIT_URL}
+	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
+		return 1
+	fi
+	droboGitConfig ${1}
+	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
+		return 1
+	fi
+	return 0
 }
 
 function droboGitConfig () {
