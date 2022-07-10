@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 # Author: Drip.Flux
 # Description: Library for common routines related to Drobo Git SCM.
 #   Intended to be sourced by other shell scripts.
@@ -9,6 +10,7 @@
 #   - Drobo Apps > Git SCM
 #   - Drobo Apps > Bash : sh (default shell on Drobo) does not support export -f
 #   - ssh : ssh compliant on Drobo (Drobo Apps > Dropbear), ssh compliant on client
+
 
 # Declare Global Variables
 ## Personalize for User's Drobo
@@ -20,6 +22,7 @@ export DROBO_GIT_PACK_DIR_PATH="/mnt/DroboFS/Shares/DroboApps/git/bin"  # Absolu
 export DROBO_GIT_PROTOCOL="ssh"  # Protocol used to communicate with Git on Drobo
 export DROBO_GIT_URL=""  # Generated as part of script
 export DROBO_ENV_PATH="${DROBO_DEFAULT_PATH}:${DROBO_GIT_SCRIPTS_PATH}"
+
 
 function generateRepoURL () {
 	# Description: Generates URL for Git repo on Drobo, updates $DROBO_GIT_URL accordingly
@@ -33,6 +36,7 @@ function generateRepoURL () {
 	return 0
 }
 export -f generateRepoURL
+
 
 function isInRangeInt () {
 	# Description:
@@ -62,6 +66,7 @@ function isInRangeInt () {
 }
 export -f isInRangeInt
 
+
 function isValidDirectoryName () {
 	# Description: Determines if ${1} is a valid directory name or not
 	# Args:
@@ -84,6 +89,7 @@ function isValidDirectoryName () {
 	return 0
 }
 export -f isValidDirectoryName
+
 
 function isValidDroboName () {
 	# Description: Determines if ${1} is a valid Drobo Name or not
@@ -108,6 +114,7 @@ function isValidDroboName () {
 }
 export -f isValidDroboName
 
+
 function isValidDroboNetID () {
 	# Description: Determines if ${1} is a valid Drobo Network Identifier (ID) or not
 	# Args:
@@ -131,6 +138,7 @@ function isValidDroboNetID () {
 }
 export -f isValidDroboNetID
 
+
 function isValidProtocol () {
 	# Description: Determines if ${1} is a valid Git + Drobo protocol or not
 	# Args:
@@ -151,6 +159,7 @@ function isValidProtocol () {
 	return 0
 }
 export -f isValidProtocol
+
 
 function isValidUsername () {
 	# Description: Determines if ${1} is a valid username or not

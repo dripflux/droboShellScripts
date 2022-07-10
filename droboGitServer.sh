@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 # Author: Drip.Flux
 # Description: Server side (on Drobo) script for creating bare Git repo.
 #   Part of droboShellScripts project.
@@ -10,10 +11,13 @@
 # Expectations:
 #   - $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
 
+
 # Required Sources
 source libDroboGit.sh
 
+
 # Declare Global Variables
+
 
 function main () {
 	# Description: Main control flow of program
@@ -45,6 +49,7 @@ function main () {
 	return ${?}
 }
 
+
 function usage () {
 	# Description: Output usage statement
 	# Args:
@@ -55,6 +60,7 @@ function usage () {
 	echo "droboGitServer.sh <help|init>"
 	return 0
 }
+
 
 function isValidEnvironment () {
 	# Description: Determines if environment is valid or not
@@ -90,6 +96,7 @@ function isValidEnvironment () {
 	fi
 	return 0
 }
+
 
 # Call main()
 main ${@}

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 # Author: Drip.Flux
 # Description: Client side (on local host) script for creating bare Git repo on Drobo, and cloning repo on local host.
 #   Part of droboShellScripts project.
@@ -11,8 +12,10 @@
 # Expectations:
 #   - $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
 
+
 # Required Sources
 source libDroboGit.sh
+
 
 # Declare Global Variables
 ## Personalize for User's Drobo
@@ -21,6 +24,7 @@ source droboID.sh  # Contains Drobo system and user identification, not part of 
 # - DROBO_GIT_NAME : Name to use as remote for Git; i.e. git remote
 # - DROBO_NET_ID : Network identifier of Drobo, IP address or hostname
 # - DROBO_USERNAME : Username on Drobo to authenticate as for Git commands, typically the Admin (Administrator) user from Drobo Dashboard
+
 
 function main () {
 	# Description: Main control flow of program
@@ -66,6 +70,7 @@ function main () {
 	return ${?}
 }
 
+
 function usage () {
 	# Description: Output usage statement
 	# Args:
@@ -76,6 +81,7 @@ function usage () {
 	echo "droboGit.sh <clone|help|init|remote>"
 	return 0
 }
+
 
 function isValidEnvironment () {
 	# Description: Determines if environment is valid or not
@@ -131,6 +137,7 @@ function isValidEnvironment () {
 	return 0
 }
 
+
 function subcmdClone () {
 	# Description: Clone an existing repo from the Drobo to the local host
 	# Args:
@@ -162,6 +169,7 @@ function subcmdClone () {
 	fi
 	return 0
 }
+
 
 function subcmdInit () {
 	# Description: Initialize a new repo on the Drobo and clone to the local host
@@ -197,6 +205,7 @@ function subcmdInit () {
 	return 0
 }
 
+
 function subcmdRemote () {
 	# Description: Initialize a new repo on the Drobo as a remote to an existing repo on the local host, pushes existing repo to Drobo
 	# Args:
@@ -231,6 +240,7 @@ function subcmdRemote () {
 	return 0
 }
 
+
 function droboSSHgitInit () {
 	# Description: SSH to Drobo, execute droboGitServer.sh
 	# Args:
@@ -261,6 +271,7 @@ function droboSSHgitInit () {
 	return 0
 }
 
+
 function droboGitClone () {
 	# Description: Clone repo on Drobo to local host using ssh
 	# Args:
@@ -282,6 +293,7 @@ function droboGitClone () {
 	fi
 	return 0
 }
+
 
 function droboGitRemoteAddConfig () {
 	# Description:
@@ -308,6 +320,7 @@ function droboGitRemoteAddConfig () {
 	return 0
 }
 
+
 function droboGitConfig () {
 	# Description:
 	# Args:
@@ -329,6 +342,7 @@ function droboGitConfig () {
 	fi
 	return 0
 }
+
 
 # Call main()
 main ${@}
