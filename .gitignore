@@ -1,7 +1,5 @@
 #!/usr/bin/env less
 
-# Course: General Repo
-# File: .gitignore
 # Description: List of patterns/files to ignore (not include in git repository)
 
 # Temporary Files
@@ -29,4 +27,4 @@
 
 # DO NOT track as part of project
 ## droboID.sh: End-user personalized files for project, confidentiality concern (information leakage)
-droboID.sh
+**/droboID.sh
