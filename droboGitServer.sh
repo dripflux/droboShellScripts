@@ -19,7 +19,7 @@ source libDroboGit.sh
 # Declare Global Variables
 
 
-function main () {
+main () {
 	# Description: Main control flow of program
 	# Args:
 	#   ${1} : File system friendly name of repo to create
@@ -50,7 +50,7 @@ function main () {
 }
 
 
-function usage () {
+usage () {
 	# Description: Output usage statement
 	# Args:
 	#   (none)
@@ -62,7 +62,7 @@ function usage () {
 }
 
 
-function isValidEnvironment () {
+isValidEnvironment () {
 	# Description: Determines if environment is valid or not
 	# Args:
 	#   ${@} : Command line arguments

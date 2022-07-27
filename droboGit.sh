@@ -26,7 +26,7 @@ source droboID.sh  # Contains Drobo system and user identification, not part of 
 # - DROBO_USERNAME : Username on Drobo to authenticate as for Git commands, typically the Admin (Administrator) user from Drobo Dashboard
 
 
-function main () {
+main () {
 	# Description: Main control flow of program
 	# Args:
 	#   ${1} : File system friendly name of repo to create
@@ -72,7 +72,7 @@ function main () {
 }
 
 
-function usage () {
+usage () {
 	# Description: Output usage statement
 	# Args:
 	#   (none)
@@ -84,7 +84,7 @@ function usage () {
 }
 
 
-function isValidEnvironment () {
+isValidEnvironment () {
 	# Description: Determines if environment is valid or not
 	# Args:
 	#   ${@} : Command line arguments
@@ -139,7 +139,7 @@ function isValidEnvironment () {
 }
 
 
-function subcmdClone () {
+subcmdClone () {
 	# Description: Clone an existing repo from the Drobo to the local host
 	# Args:
 	#   ${1} : File system friendly name of repo to clone from the Drobo
@@ -151,7 +151,7 @@ function subcmdClone () {
 
 	## Correct Usage
 	isInRangeInt 1 1 $#
-	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
 	## Actions on Drobo
@@ -172,7 +172,7 @@ function subcmdClone () {
 }
 
 
-function subcmdInit () {
+subcmdInit () {
 	# Description: Initialize a new repo on the Drobo and clone to the local host
 	# Args:
 	#   ${1} : File system friendly name of repo to initialize on the Drobo and clone to local host
@@ -184,7 +184,7 @@ function subcmdInit () {
 
 	## Correct Usage
 	isInRangeInt 1 1 $#
-	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
 	## Actions on Drobo
@@ -207,7 +207,7 @@ function subcmdInit () {
 }
 
 
-function subcmdRemote () {
+subcmdRemote () {
 	# Description: Initialize a new repo on the Drobo as a remote to an existing repo on the local host, pushes existing repo to Drobo
 	# Args:
 	#   ${1} : File system friendly name of repo to initialize on the Drobo
@@ -219,7 +219,7 @@ function subcmdRemote () {
 
 	## Correct Usage
 	isInRangeInt 1 1 $#
-	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
 	## Actions on Drobo
@@ -242,7 +242,7 @@ function subcmdRemote () {
 }
 
 
-function droboSSHgitInit () {
+droboSSHgitInit () {
 	# Description: SSH to Drobo, execute droboGitServer.sh
 	# Args:
 	#   ${1} : File system friendly name of repo to initialize on the Drobo
@@ -253,7 +253,7 @@ function droboSSHgitInit () {
 
 	## Correct Usage
 	isInRangeInt 1 1 $#
-	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
 	ssh ${DROBO_USERNAME}@${DROBO_NET_ID} "export PATH=${DROBO_ENV_PATH} && droboGitServer.sh init ${1}"
@@ -273,7 +273,7 @@ function droboSSHgitInit () {
 }
 
 
-function droboGitClone () {
+droboGitClone () {
 	# Description: Clone repo on Drobo to local host using ssh
 	# Args:
 	#   ${1} : File system friendly name of repo to initialize on the Drobo
@@ -284,7 +284,7 @@ function droboGitClone () {
 
 	## Correct Usage
 	isInRangeInt 1 1 $#
-	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
 	git clone -u ${DROBO_GIT_PACK_DIR_PATH}/git-upload-pack ${DROBO_GIT_URL} ${1}
@@ -296,7 +296,7 @@ function droboGitClone () {
 }
 
 
-function droboGitRemoteAddConfig () {
+droboGitRemoteAddConfig () {
 	# Description:
 	# Args:
 	#   ${1} : Name of remote in Git for Drobo
@@ -307,7 +307,7 @@ function droboGitRemoteAddConfig () {
 
 	## Correct Usage
 	isInRangeInt 1 1 $#
-	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
 	git remote add ${1} ${DROBO_GIT_URL}
@@ -322,7 +322,7 @@ function droboGitRemoteAddConfig () {
 }
 
 
-function droboGitConfig () {
+droboGitConfig () {
 	# Description:
 	# Args:
 	#   ${1} : Name of remote in Git for Drobo
@@ -333,7 +333,7 @@ function droboGitConfig () {
 
 	## Correct Usage
 	isInRangeInt 1 1 $#
-	if (( 0 != ${?} )) ; then  # Invalid number of function arguments
+	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
 	git config remote.${1}.uploadpack ${DROBO_GIT_PACK_DIR_PATH}/git-upload-pack && git config remote.${1}.receivepack ${DROBO_GIT_PACK_DIR_PATH}/git-receive-pack

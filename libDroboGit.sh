@@ -24,7 +24,7 @@ export DROBO_GIT_URL=""  # Generated as part of script
 export DROBO_ENV_PATH="${DROBO_DEFAULT_PATH}:${DROBO_GIT_SCRIPTS_PATH}"
 
 
-function generateRepoURL () {
+generateRepoURL () {
 	# Description: Generates URL for Git repo on Drobo, updates $DROBO_GIT_URL accordingly
 	# Args:
 	#   ...
@@ -38,7 +38,7 @@ function generateRepoURL () {
 export -f generateRepoURL
 
 
-function isInRangeInt () {
+isInRangeInt () {
 	# Description:
 	# Args:
 	#   ${1) : Minimum integer of range
@@ -67,7 +67,7 @@ function isInRangeInt () {
 export -f isInRangeInt
 
 
-function isValidDirectoryName () {
+isValidDirectoryName () {
 	# Description: Determines if ${1} is a valid directory name or not
 	# Args:
 	#   ${1} : Directory name to validate
@@ -91,7 +91,7 @@ function isValidDirectoryName () {
 export -f isValidDirectoryName
 
 
-function isValidDroboName () {
+isValidDroboName () {
 	# Description: Determines if ${1} is a valid Drobo Name or not
 	# Args:
 	#   ${1} : Drobo name to validate
@@ -115,7 +115,7 @@ function isValidDroboName () {
 export -f isValidDroboName
 
 
-function isValidDroboNetID () {
+isValidDroboNetID () {
 	# Description: Determines if ${1} is a valid Drobo Network Identifier (ID) or not
 	# Args:
 	#   ${1} : Drobo name to validate
@@ -139,7 +139,7 @@ function isValidDroboNetID () {
 export -f isValidDroboNetID
 
 
-function isValidProtocol () {
+isValidProtocol () {
 	# Description: Determines if ${1} is a valid Git + Drobo protocol or not
 	# Args:
 	#   0 : VALID   Protocol
@@ -161,7 +161,7 @@ function isValidProtocol () {
 export -f isValidProtocol
 
 
-function isValidUsername () {
+isValidUsername () {
 	# Description: Determines if ${1} is a valid username or not
 	# Args:
 	#   ${1} : Username to validate
