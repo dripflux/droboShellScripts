@@ -44,27 +44,27 @@ main () {
 	#   remote : [2 args] ...
 
 	## Validate Environment
-	isValidEnvironment ${@}
+	isValidEnvironment "${@}"
 	if (( 0 != ${?} )) ; then  # Invalid environment
 		usage
 		return 4
 	fi
-	## Perform sub-command
+	## Perform subcommand
 	case ${1} in
 		clone )
-			subcmdClone ${2}
+			subcmdClone "${2}"
 			;;
 		help )
 			usage
 			;;
 		init )
-			subcmdInit ${2}
+			subcmdInit "${2}"
 			;;
 		remote )
-			subcmdRemote ${2}
+			subcmdRemote "${2}"
 			;;
 		* )  # ERROR: Unknown sub-command
-			echo "ERROR: Unknown sub-command (${1})" >&2
+			echo "ERROR: Unknown subcommand (${1})" >&2
 			return 4
 			;;
 	esac
@@ -80,7 +80,6 @@ usage () {
 	#   (none)
 
 	echo "droboGit.sh <clone|help|init|remote>"
-	return 0
 }
 
 
@@ -95,7 +94,7 @@ isValidEnvironment () {
 	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 		return 1
 	fi
-	if [[ "${1}" = "help" ]] ; then
+	if [ "${1}" = "help" ] ; then
 		return 0
 	fi
 	isInRangeInt 2 2 $#
@@ -135,7 +134,6 @@ isValidEnvironment () {
 	if (( 0 != ${?} )) ; then  # Invalid
 		return 1
 	fi
-	return 0
 }
 
 
@@ -168,7 +166,6 @@ subcmdClone () {
 	if (( 0 != ${?} )) ; then  # ERROR: ...
 		return 1
 	fi
-	return 0
 }
 
 
@@ -203,7 +200,6 @@ subcmdInit () {
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
-	return 0
 }
 
 
@@ -238,7 +234,6 @@ subcmdRemote () {
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 3
 	fi
-	return 0
 }
 
 
@@ -269,7 +264,6 @@ droboSSHgitInit () {
 			return 2
 			;;
 	esac
-	return 0
 }
 
 
@@ -292,7 +286,6 @@ droboGitClone () {
 		echo "ERROR: Failed to clone repo from Drobo" >&2
 		return 1
 	fi
-	return 0
 }
 
 
@@ -318,7 +311,6 @@ droboGitRemoteAddConfig () {
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
-	return 0
 }
 
 
@@ -336,14 +328,13 @@ droboGitConfig () {
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
-	git config remote.${1}.uploadpack ${DROBO_GIT_PACK_DIR_PATH}/git-upload-pack && git config remote.${1}.receivepack ${DROBO_GIT_PACK_DIR_PATH}/git-receive-pack
+	git config remote."${1}".uploadpack ${DROBO_GIT_PACK_DIR_PATH}/git-upload-pack && git config remote."${1}".receivepack ${DROBO_GIT_PACK_DIR_PATH}/git-receive-pack
 	if (( 0 != ${?} )) ; then  # ERROR: Failed to configure repo on local host
 		echo "ERROR: Failed to configure repo on local host" >&2
 		return 1
 	fi
-	return 0
 }
 
 
 # Call main()
-main ${@}
+main "${@}"
