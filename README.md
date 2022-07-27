@@ -55,7 +55,7 @@ Dependencies:
 
 **Design Philosophy**
 
-Since a Drobo is designed to be used as a file server not a development workstation the Git repos created by this code base are *bare* repos.
+Since a Drobo is designed to be used as a file server not a development workstation the Git repos created by this code base are _bare_ repos.
 There are three use cases the code base is designed tp support:
 
 - (init) initializing a new repo on the Drobo;
@@ -65,7 +65,7 @@ There are three use cases the code base is designed tp support:
 Those three use cases are mapped to the three `droboGit.sh` subcommands: `init`, `clone`, and `remote` respectively.
 The three subcommands are simplified versions of the Git subcommands: `init`, `clone`, `remote add`.
 As such the implementations of the subcommands follow the default Git versions without extra options.
-That is `init` will initialize the repo on the local host in the current working directory, as *directory* is an optional argument to `git init`.
+That is `init` will initialize the repo on the local host in the current working directory, as _directory_ is an optional argument to `git init`.
 But `clone` will clone the repo into a new directory on the local host named after the repo initialized on the Drobo, just as `git clone` would.
 
 All of the subcommands implemented are initiated from the local host and use the Drobo as a remote.
