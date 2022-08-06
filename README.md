@@ -2,7 +2,35 @@
 
 Shell scripts for automating various tasks on a Drobo or from a remote host communicating with the Drobo.
 
-## General Design Philosophy
+
+**Table of Contents**
+
+- [Overview](#overview)
+  - [Design Philosophy](#design-philosophy)
+- [Sub Projects](#sub-projects)
+  - [Drobo Git Scripts](#drobo-git-scripts)
+
+
+[top](#drobo-shell-scripts)
+
+## Overview
+
+
+**Directory Tree**
+
+```
+.
+|-- docs/  : Documentation
+|   `-- droboGitShellScripts.drawio
+|-- droboGitServer.sh
+|-- droboGit.sh
+|-- libDroboGit.sh
+`-- README.md  : This README
+```
+
+[top](#drobo-shell-scripts)
+
+### Design Philosophy
 
 Design Philosophy Summary:
 - Drobo's are designed to be SOHO file servers
@@ -21,25 +49,19 @@ In fact, the Drobo Dashboard administrator account is the *only* account that is
 The administrator account does have super-user access via `sudo`; i.e. the administrator account is in `sudoers`.
 To that extent the scripts designed here minimize the elevating to `root` to the fullest extent possible.
 
-## Repo Tree
 
-```
-.
-|-- docs
-|   \-- droboGitShellScripts.drawio
-|-- README.md
-|-- droboGit.sh
-|-- droboGitServer.sh
-\-- libDroboGit.sh
-```
+[top](#drobo-shell-scripts)
 
 ## Sub Projects
 
-- Drobo Git Scripts
+- [Drobo Git Scripts](#drobo-git-scripts)
+
+
+[top](#drobo-shell-scripts)
 
 ### Drobo Git Scripts
 
-*Synopsis*
+_Synopsis_
 
 Shell scripts for initializing and cloning Git repos on a Drobo from a host.
 
@@ -50,7 +72,7 @@ Dependencies:
 - Drobo Apps > Bash : `sh` (default shell on Drobo) does not support `export -f`
 - ssh : ssh compliant on Drobo (Drobo Apps > Dropbear), ssh compliant on client
 
-*Design Philosophy*
+_Design Philosophy_
 
 Since a Drobo is designed to be used as a file server not a development workstation the Git repos created by this code base are *bare* repos.
 There are three use cases the code base is designed tp support:
@@ -72,6 +94,9 @@ The Git repositories on the Drobo are created and managed using the Drobo Dashbo
 Besides initial directory setup on the Drobo which needs `root` privilege to complete, the scripts on the local host and the Drobo *do not* need elevated privileges.
 The Drobo Dashboard Administrator account is used, but `sudo` is not needed for or used in the scripts.
 
-*Usage*
+_Usage_
 
 ...
+
+
+[top](#drobo-shell-scripts)<span id="end"></span>
