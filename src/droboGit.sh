@@ -12,6 +12,8 @@
 # Expectations:
 #   - $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
 
+# Save script name
+SELF="${0}"
 
 # Required Sources
 source libDroboGit.sh
@@ -40,32 +42,48 @@ main () {
 	#   help   : [1-2 args] ...
 	#   clone  : [2 args] ...
 	#   init   : [2 args] ...
-	#   link   : [2 args] ...
+	#   mirror   : [2 args] ...
 	#   remote : [2 args] ...
 
-	## Validate Environment
+	# Set up working set
+	subcommand="${1}"
+	shift
+	# Core actions
+	# Validate Environment
 	isValidEnvironment "${@}"
-	if (( 0 != ${?} )) ; then  # Invalid environment
-		usage
-		return 4
-	fi
-	## Perform subcommand
-	case ${1} in
-		clone )
-			subcmdClone "${2}"
+	# if (( 0 != ${?} )) ; then  # Invalid environment
+	# 	usage
+	# 	return 4
+	# fi
+	# Perform subcommand
+	case "${subcommand}" in
+		help )       # (base subcommand) Display this help message supports single term filtering
+			searchTerm="${1}"
+			shift
+			usage "${searchTerm}"
 			;;
-		help )
+		ls | list )  # (base subcommand) List non-base subcommands
+			listNonBaseSubcommands
+			;;
+		clone )   # ...
+			subcommandClone "${2}"
+			;;
+		init )    # ...
+			subcommandInit "${2}"
+			;;
+		mirror )  # ...
+			subcommandMirror "${2}"
+			;;
+		remote )  # ...
+			subcommandRemote "${2}"
+			;;
+		* )
+			# Default: Blank or unknown subcommand, report error if unknown subcommand
+			# Note: Lack of comment on same line as case, default action will not be displayed by usage or ls subcommand
 			usage
-			;;
-		init )
-			subcmdInit "${2}"
-			;;
-		remote )
-			subcmdRemote "${2}"
-			;;
-		* )  # ERROR: Unknown sub-command
-			echo "ERROR: Unknown subcommand (${1})" >&2
-			return 4
+			if [[ -n "${subcommand}" ]] ; then
+				errorExit "ERROR: Unknown subcommand: ${subcommand}" 4
+			fi
 			;;
 	esac
 	return ${?}
@@ -73,13 +91,80 @@ main () {
 
 
 usage () {
-	# Description: Output usage statement
-	# Args:
+	# Description: Generate and display usage
+	# References: Albing, C., JP Vossen. bash Idioms. O'Reilly. 2022.
+	# Arguments:
+	#   ${1} : (Optional) Search term
+	# Return:
+	#   0  : (normal)
+	#   1+ : ERROR
+
+	# Set up working set
+	searchTerm="${1}"
+	shift
+	# Core actions
+	(
+		echo $( basename "${SELF}" ) 'Usage:'
+		egrep '\)[[:space:]]+# ' "${SELF}" | tr -s '\t'
+	) | grep "${searchTerm:-.}" | less
+}
+
+
+errorExit () {
+	# Description: Output ${1} (error message) to stderr and exit with ${2} (error status).
+	# Arguments:
+	#   ${1} : Error message to write
+	#   ${2} : (Optional) Error status to exit with
+	# Return:
+	#   0  : (normal)
+	#   1+ : ERROR
+
+	# Set up working set
+	errorStatus=1
+	errorMessage="${1}"
+	shift
+	# Core actions
+	echo "${errorMessage}" >&2
+	if [[ -n "${1}" ]] ; then
+		errorStatus="${1}"
+	fi
+	cleanUpArtifacts
+	exit "${errorStatus}"
+}
+
+
+warningReport () {
+	# Description: Output ${1} (warning message) to stderr, but DO NOT exit.
+	# Arguments:
+	#   ${1} : Warning message to write
+	# Return:
+	#   0  : (normal)
+	#   1+ : ERROR
+
+	# Set up working set
+	warningMessage="${1}"
+	shift
+	# Core actions
+	echo "${warningMessage}" >&2
+}
+
+
+listNonBaseSubcommands () {
+	# Description: Generate and display list of non-base subcommands
+	# References: Albing, C., JP Vossen. bash Idioms. O'Reilly. 2022.
+	# Arguments:
 	#   (none)
 	# Return:
-	#   (none)
+	#   0  : (normal)
+	#   1+ : ERROR
 
-	echo "droboGit.sh <clone|help|init|remote>"
+	# Set up working set
+	:
+	# Core actions
+	(
+		echo $( basename "${SELF}" ) 'Subcommands:'
+		egrep '\)[[:space:]]+# ' "${SELF}" | tr -d '\t'
+	) | grep -v 'base[ ]subcommand' | less
 }
 
 
@@ -90,17 +175,17 @@ isValidEnvironment () {
 	# Return:
 	#   0 : VALID   environment
 	#   1 : INVALID environment
-	isInRangeInt 1 2 $#
-	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
-		return 1
-	fi
-	if [ "${1}" = "help" ] ; then
+	# isInRangeInt 1 2 $#
+	# if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
+	# 	return 1
+	# fi
+	if [[ "${1}" -eq "help" ]] ; then
 		return 0
 	fi
-	isInRangeInt 2 2 $#
-	if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
-		return 1
-	fi
+	# isInRangeInt 2 2 $#
+	# if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
+	# 	return 1
+	# fi
 	isValidDirectoryName "${DROBO_REPOS_DIR_PATH}"
 	if (( 0 != ${?} )) ; then  # Invalid directory name - $DROBO_REPOS_DIR_PATH from libDroboShellGit.sh
 		return 1
@@ -137,7 +222,7 @@ isValidEnvironment () {
 }
 
 
-subcmdClone () {
+subcommandClone () {
 	# Description: Clone an existing repo from the Drobo to the local host
 	# Args:
 	#   ${1} : File system friendly name of repo to clone from the Drobo
@@ -157,7 +242,7 @@ subcmdClone () {
 	:  # Placeholder, syntactic NOP
 	## Actions on local host
 	echo "[on localhost]"
-	droboGitClone ${1}
+	droboGitClone "${1}"
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
@@ -203,7 +288,7 @@ subcmdInit () {
 }
 
 
-subcmdRemote () {
+subcommandMirror () {
 	# Description: Initialize a new repo on the Drobo as a remote to an existing repo on the local host, pushes existing repo to Drobo
 	# Args:
 	#   ${1} : File system friendly name of repo to initialize on the Drobo
@@ -237,6 +322,16 @@ subcmdRemote () {
 }
 
 
+subcommandRemote () {
+	# Description: ...
+
+	# Set up working set
+	:
+	# Core actions
+	:
+}
+
+
 droboSSHgitInit () {
 	# Description: SSH to Drobo, execute droboGitServer.sh
 	# Args:
@@ -253,13 +348,16 @@ droboSSHgitInit () {
 	fi
 	ssh ${DROBO_USERNAME}@${DROBO_NET_ID} "export PATH=${DROBO_ENV_PATH} && droboGitServer.sh init ${1}"
 	case ${?} in
-		0 )    # Normal return
+		# Normal return
+		0 )
 			;;
-		255 )  # ERROR: ssh failed
+		# ERROR: ssh failed
+		255 )
 			echo "ERROR: ssh to Drobo failed" >&2
 			return 2
 			;;
-		* )    # ERROR: droboGitServer.sh failed
+		# ERROR: droboGitServer.sh failed
+		* )
 			echo "ERROR: droboGitServer.sh on Drobo failed, exit status: ${?}" >&2
 			return 2
 			;;
