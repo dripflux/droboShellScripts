@@ -5,6 +5,7 @@
 
 - [Overview](#overview)
   - [Design Philosophy](#design-philosophy)
+- [Usage](#usage)
 
 
 [top](#drobo-git-scripts)
@@ -31,21 +32,21 @@ There are four use cases the code base is designed to support.
 The use cases represent the four possible starting states of whether the repo in question resides on the host or not, and on the Drobo or not.
 The end state is that the repo in question resides on both the host and Drobo, and the host can push to and pull from the remote repo on the Drobo.
 
-The below table depicts the four starting states and the associated Drobo shell script subcommand for the starting state.
+The below table depicts the four starting states and the associated Drobo shell script (`droboGit.sh`) subcommand for the starting state.
 To the extent possible the subcommand is mapped to the same Git subcommand.
 
 |    |  Repo Not on Drobo  |  Repo on Drobo  |
 |----|---------------------|-----------------|
 |  Repo Not on Host  |  init    |  clone   |
-|  Repo on Host      |  remote  |  mirror  |
+|  Repo on Host      |  mirror  |  remote  |
 
 - (init) initializing a new repo on the Drobo;
-- (clone) cloning a repo that already exists on the Drobo; and
-- (remote) creating a new repo on the Drobo from an already existing repo on the host
+- (clone) cloning a repo that already exists on the Drobo;
+- (mirror) creating a new repo on the Drobo from an already existing repo on the host; and
+- (remote) adding a repo on the Drobo as a remote from an already existing repo on the host
 
-Those three use cases are mapped to the three `droboGit.sh` sub-commands: `init`, `clone`, and `remote` respectively.
-The three sub-commands are simplified versions of the Git sub-commands: `init`, `clone`, `remote add`.
-As such the implementations of the sub-commands follow the default Git versions without extra options.
+The `droboGit.sh` subcommands are simplified versions of the Git subcommands, e.g. `git init`, `git clone`.
+As such the implementations of the subcommands follow the default Git versions without extra options.
 That is `init` will initialize the repo on the local host in the current working directory, as _directory_ is an optional argument to `git init`.
 But `clone` will clone the repo into a new directory on the local host named after the repo initialized on the Drobo, just as `git clone` would.
 
@@ -53,12 +54,13 @@ All of the subcommands implemented are initiated from the local host and use the
 Communications between the host and the Drobo are via SSH.
 
 The Git repositories on the Drobo are created and managed using the Drobo Dashboard Administrator account.
-Besides initial directory setup on the Drobo which needs `root` privilege to complete, the scripts on the local host and the Drobo *do not* need elevated privileges.
-The Drobo Dashboard Administrator account is used, but `sudo` is not needed for or used in the scripts.
+Besides initial directory setup on the Drobo which needs `root` privilege to complete, the scripts on the local host and the Drobo _do not_ need elevated privileges.
+The Drobo Dashboard Administrator account is used, but `sudo` is not needed for nor used in the scripts.
 
-_Usage_
+
+## Usage
 
 ...
 
 
-[top](#drobo-git-scripts)<span id="end">
+[top](#drobo-git-scripts)<span id="end"></span>
