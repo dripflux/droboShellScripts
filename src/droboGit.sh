@@ -66,16 +66,24 @@ main () {
 			listNonBaseSubcommands
 			;;
 		clone )   # ...
-			subcommandClone "${2}"
+			repoSlug="${1}"
+			shift
+			subcommandClone "${repoSlug}"
 			;;
 		init )    # ...
-			subcommandInit "${2}"
+			repoSlug="${1}"
+			shift
+			subcommandInit "${repoSlug}"
 			;;
 		mirror )  # ...
-			subcommandMirror "${2}"
+			repoSlug="${1}"
+			shift
+			subcommandMirror "${repoSlug}"
 			;;
 		remote )  # ...
-			subcommandRemote "${2}"
+			repoSlug="${1}"
+			shift
+			subcommandRemote "${repoSlug}"
 			;;
 		* )
 			# Default: Blank or unknown subcommand, report error if unknown subcommand
@@ -179,9 +187,9 @@ isValidEnvironment () {
 	# if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 	# 	return 1
 	# fi
-	if [[ "${1}" -eq "help" ]] ; then
-		return 0
-	fi
+	# if [[ "${1}" -eq "help" ]] ; then
+	# 	return 0
+	# fi
 	# isInRangeInt 2 2 $#
 	# if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 	# 	return 1
@@ -190,11 +198,11 @@ isValidEnvironment () {
 	if (( 0 != ${?} )) ; then  # Invalid directory name - $DROBO_REPOS_DIR_PATH from libDroboShellGit.sh
 		return 1
 	fi
-	isValidDirectoryName "${2}"
+	isValidDirectoryName "${1}"
 	if (( 0 != ${?} )) ; then  # Invalid directory name - ${2} from caller
 		return 1
 	fi
-	DROBO_GIT_DIR="${DROBO_REPOS_DIR_PATH}${2}"
+	DROBO_GIT_DIR="${DROBO_REPOS_DIR_PATH}${1}"
 	isValidDirectoryName "${DROBO_GIT_DIR}"
 	if (( 0 != ${?} )) ; then  # Invalid directory name - ${DROBO_GIT_DIR}
 		return 1
