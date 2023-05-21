@@ -1,14 +1,17 @@
 # Drobo Git Scripts
 
 
+## General
+
 **Table of Contents**
 
+- General
 - [Overview](#overview)
   - [Design Philosophy](#design-philosophy)
 - [Usage](#usage)
 
 
-[top](#drobo-git-scripts)
+[top](#general)
 
 ## Overview
 
@@ -23,7 +26,7 @@ Shell scripts for initializing and cloning Git repos on a Drobo from a host.
 - ssh : ssh compliant on Drobo (Drobo Apps > Dropbear), ssh compliant on client
 
 
-[top](#drobo-git-scripts)
+[top](#general)
 
 ### Design Philosophy
 
@@ -57,10 +60,10 @@ The Git repositories on the Drobo are created and managed using the Drobo Dashbo
 Besides initial directory setup on the Drobo which needs `root` privilege to complete, the scripts on the local host and the Drobo _do not_ need elevated privileges.
 The Drobo Dashboard Administrator account is used, but `sudo` is not needed for nor used in the scripts.
 
+[top](#general)
 
 ## Usage
 
 ...
 
-
-[top](#drobo-git-scripts)<span id="end"></span>
+[top](#general)

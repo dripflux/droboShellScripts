@@ -44,6 +44,7 @@ main () {
 			git init --bare "${DROBO_NEW_GIT_DIR}"
 			;;
 		* )
+			:
 			;;
 	esac
 	return ${?}

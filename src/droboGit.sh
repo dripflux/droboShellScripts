@@ -12,19 +12,21 @@
 # Expectations:
 #   - $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
 
+
 # Save script name
 SELF="${0}"
+
 
 # Required Sources
 source libDroboGit.sh
 
 
 # Declare Global Variables
-## Personalize for User's Drobo
+# Personalize for User's Drobo
 source droboID.sh  # Contains Drobo system and user identification, not part of repo, expected to be in $PATH
 # Expect following variables to be assigned in droboID.sh
-# - DROBO_GIT_NAME : Name to use as remote for Git; i.e. git remote
-# - DROBO_NET_ID : Network identifier of Drobo, IP address or hostname
+# - DROBO_GIT_NAME : Name to use as remote for Git; i.e. git remote $DROBO_GIT_NAME
+# - DROBO_NET_ID   : Network identifier of Drobo, IP address or hostname
 # - DROBO_USERNAME : Username on Drobo to authenticate as for Git commands, typically the Admin (Administrator) user from Drobo Dashboard
 
 
@@ -42,7 +44,7 @@ main () {
 	#   help   : [1-2 args] ...
 	#   clone  : [2 args] ...
 	#   init   : [2 args] ...
-	#   mirror   : [2 args] ...
+	#   mirror : [2 args] ...
 	#   remote : [2 args] ...
 
 	# Set up working set
@@ -57,30 +59,33 @@ main () {
 	# fi
 	# Perform subcommand
 	case "${subcommand}" in
-		help )       # (base subcommand) Display this help message supports single term filtering
+		help )     # Display this help message supports single term filtering
 			searchTerm="${1}"
 			shift
 			usage "${searchTerm}"
 			;;
-		ls | list )  # (base subcommand) List non-base subcommands
-			listNonBaseSubcommands
+		manual )   # Display full manual
+			:
 			;;
-		clone )   # ...
+		list )     # List repositories on Drobo
+			:
+			;;
+		clone )    # Clone repository that exists on Drobo but does not exist on local system
 			repoSlug="${1}"
 			shift
 			subcommandClone "${repoSlug}"
 			;;
-		init )    # ...
+		init )     # Initialize repository that does not exist on Drobo and does not exist on local system
 			repoSlug="${1}"
 			shift
 			subcommandInit "${repoSlug}"
 			;;
-		mirror )  # ...
+		mirror )   # Mirror repository that does exist on local system that does not exist on Drobo
 			repoSlug="${1}"
 			shift
 			subcommandMirror "${repoSlug}"
 			;;
-		remote )  # ...
+		remote )   # Add Drobo as remote for repository that does exist on local system and does exist on Drobo
 			repoSlug="${1}"
 			shift
 			subcommandRemote "${repoSlug}"
@@ -262,7 +267,7 @@ subcommandClone () {
 }
 
 
-subcmdInit () {
+subcommandInit () {
 	# Description: Initialize a new repo on the Drobo and clone to the local host
 	# Args:
 	#   ${1} : File system friendly name of repo to initialize on the Drobo and clone to local host

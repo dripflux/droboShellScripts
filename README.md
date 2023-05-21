@@ -2,19 +2,19 @@
 
 Shell scripts for automating various tasks on a Drobo or from a remote host communicating with the Drobo.
 
+## General
 
 **Table of Contents**
 
+- General
 - [Overview](#overview)
   - [Design Philosophy](#design-philosophy)
 - [Sub Projects](#sub-projects)
   - [Drobo Git Scripts](docs/droboGit/README.md)
 
-
-[top](#drobo-shell-scripts)
+[top](#general)
 
 ## Overview
-
 
 **Directory Tree**
 
@@ -28,8 +28,7 @@ Shell scripts for automating various tasks on a Drobo or from a remote host comm
 `-- README.md  : This README
 ```
 
-
-[top](#drobo-shell-scripts)
+[top](#general)
 
 ### Design Philosophy
 
@@ -50,12 +49,10 @@ In fact, the Drobo Dashboard administrator account is the _only_ account that is
 The administrator account does have super-user access via `sudo`; i.e. the administrator account is in `sudoers`.
 To that extent the scripts designed here minimize elevating to `root` to the fullest extent possible.
 
-
-[top](#drobo-shell-scripts)
+[top](#general)
 
 ## Sub Projects
 
-- [Drobo Git Scripts](docs/droboGit/README.md)
+- [Drobo Git Scripts](./docs/droboGit/README.md)
 
-
-[top](#drobo-shell-scripts)<span id="end"></span>
+[top](#general)
