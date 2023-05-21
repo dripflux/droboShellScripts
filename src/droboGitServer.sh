@@ -30,7 +30,7 @@ main () {
 	#   4 : ERROR:   Incorrect [sub-command] usage, or invalid environment
 
 	## Validate Environment
-	isValidEnvironment ${@}
+	isValidEnvironment "${@}"
 	if (( 0 != ${?} )) ; then  # Invalid environment
 		usage
 		return 4
@@ -100,4 +100,4 @@ isValidEnvironment () {
 
 
 # Call main()
-main ${@}
+main "${@}"
