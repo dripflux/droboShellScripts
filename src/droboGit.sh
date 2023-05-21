@@ -169,6 +169,7 @@ isValidEnvironment () {
 	# Return:
 	#   0 : VALID   environment
 	#   1 : INVALID environment
+
 	# isInRangeInt 1 2 $#
 	# if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 	# 	return 1
@@ -193,19 +194,19 @@ isValidEnvironment () {
 	if (( 0 != ${?} )) ; then  # Invalid directory name - ${DROBO_GIT_DIR}
 		return 1
 	fi
-	isValidDroboName ${DROBO_GIT_NAME}
+	isValidDroboName "${DROBO_GIT_NAME}"
 	if (( 0 != ${?} )) ; then  # Invalid
 		return 1
 	fi
-	isValidDroboNetID ${DROBO_NET_ID}
+	isValidDroboNetID "${DROBO_NET_ID}"
 	if (( 0 != ${?} )) ; then  # Invalid
 		return 1
 	fi
-	isValidUsername ${DROBO_USERNAME}
+	isValidUsername "${DROBO_USERNAME}"
 	if (( 0 != ${?} )) ; then  # Invalid
 		return 1
 	fi
-	isValidProtocol ${DROBO_GIT_PROTOCOL}
+	isValidProtocol "${DROBO_GIT_PROTOCOL}"
 	if (( 0 != ${?} )) ; then  # Invalid
 		return 1
 	fi
@@ -240,7 +241,7 @@ subcommandClone () {
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
-	cd ${1}
+	cd "${1}"
 	droboGitConfig origin
 	if (( 0 != ${?} )) ; then  # ERROR: ...
 		return 1
@@ -265,7 +266,7 @@ subcommandInit () {
 	fi
 	## Actions on Drobo
 	echo "[on Drobo]"
-	droboSSHgitInit ${1}
+	droboSSHgitInit "${1}"
 	if (( 0 != ${?} )) ; then  # ERROR: ...
 		return 3
 	fi
@@ -299,17 +300,17 @@ subcommandMirror () {
 	fi
 	## Actions on Drobo
 	echo "[on Drobo]"
-	droboSSHgitInit ${1}
+	droboSSHgitInit "${1}"
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 3
 	fi
 	## Actions on local host
 	echo "[on localhost]"
-	droboGitRemoteAddConfig ${DROBO_GIT_NAME}
+	droboGitRemoteAddConfig "${DROBO_GIT_NAME}"
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
-	git push --all ${DROBO_GIT_NAME}
+	git push --all "${DROBO_GIT_NAME}"
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 3
 	fi
@@ -340,7 +341,7 @@ droboSSHgitInit () {
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
-	ssh ${DROBO_USERNAME}@${DROBO_NET_ID} "export PATH=${DROBO_ENV_PATH} && droboGitServer.sh init ${1}"
+	ssh "${DROBO_USERNAME}@${DROBO_NET_ID}" "export PATH=${DROBO_ENV_PATH} && droboGitServer.sh init ${1}"
 	case ${?} in
 		# Normal return
 		0 )
@@ -373,7 +374,7 @@ droboGitClone () {
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
-	git clone -u ${DROBO_GIT_PACK_DIR_PATH}/git-upload-pack ${DROBO_GIT_URL} ${1}
+	git clone -u "${DROBO_GIT_PACK_DIR_PATH}/git-upload-pack" "${DROBO_GIT_URL}" "${1}"
 	if (( 0 != ${?} )) ; then  # ERROR: Failed to clone repo from Drobo
 		echo "ERROR: Failed to clone repo from Drobo" >&2
 		return 1
@@ -395,11 +396,11 @@ droboGitRemoteAddConfig () {
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
-	git remote add ${1} ${DROBO_GIT_URL}
+	git remote add "${1}" "${DROBO_GIT_URL}"
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
-	droboGitConfig ${1}
+	droboGitConfig "${1}"
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
@@ -420,7 +421,7 @@ droboGitConfig () {
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
-	git config remote."${1}".uploadpack ${DROBO_GIT_PACK_DIR_PATH}/git-upload-pack && git config remote."${1}".receivepack ${DROBO_GIT_PACK_DIR_PATH}/git-receive-pack
+	git config "remote.${1}.uploadpack" "${DROBO_GIT_PACK_DIR_PATH}/git-upload-pack" && git config "remote.${1}.receivepack" "${DROBO_GIT_PACK_DIR_PATH}/git-receive-pack"
 	if (( 0 != ${?} )) ; then  # ERROR: Failed to configure repo on local host
 		echo "ERROR: Failed to configure repo on local host" >&2
 		return 1
