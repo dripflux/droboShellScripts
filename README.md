@@ -22,9 +22,10 @@ Shell scripts for automating various tasks on a Drobo or from a remote host comm
 .
 |-- docs/  : Documentation
 |   `-- droboGit/  : Documentation for Drobo Git Scripts sub project
-|-- droboGitServer.sh
-|-- droboGit.sh
-|-- libDroboGit.sh
+|-- src/  : Source files
+|   |-- droboGitServer.sh
+|   |-- droboGit.sh
+|   `-- libDroboGit.sh
 `-- README.md  : This README
 ```
 
