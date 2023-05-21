@@ -80,7 +80,7 @@ main () {
 			shift
 			subcommandInit "${repoSlug}"
 			;;
-		mirror )   # Mirror repository that does exist on local system that does not exist on Drobo
+		mirror )   # Mirror repository that does exist on local system but does not exist on Drobo
 			repoSlug="${1}"
 			shift
 			subcommandMirror "${repoSlug}"
