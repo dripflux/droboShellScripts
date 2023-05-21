@@ -162,25 +162,6 @@ warningReport () {
 }
 
 
-listNonBaseSubcommands () {
-	# Description: Generate and display list of non-base subcommands
-	# References: Albing, C., JP Vossen. bash Idioms. O'Reilly. 2022.
-	# Arguments:
-	#   (none)
-	# Return:
-	#   0  : (normal)
-	#   1+ : ERROR
-
-	# Set up working set
-	:
-	# Core actions
-	(
-		echo $( basename "${SELF}" ) 'Subcommands:'
-		egrep '\)[[:space:]]+# ' "${SELF}" | tr -d '\t'
-	) | grep -v 'base[ ]subcommand' | less
-}
-
-
 isValidEnvironment () {
 	# Description: Determines if environment is valid or not
 	# Args:
