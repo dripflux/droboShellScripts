@@ -1,6 +1,5 @@
 # Drobo Git Scripts
 
-
 ## General
 
 **Table of Contents**
@@ -10,13 +9,11 @@
   - [Design Philosophy](#design-philosophy)
 - [Usage](#usage)
 
-
 [top](#general)
 
 ## Overview
 
 Shell scripts for initializing and cloning Git repos on a Drobo from a host.
-
 
 **Dependencies**
 
@@ -24,7 +21,6 @@ Shell scripts for initializing and cloning Git repos on a Drobo from a host.
 - Drobo Apps > Git SCM
 - Drobo Apps > Bash : `sh` (default shell on Drobo) does not support `export -f`
 - ssh : ssh compliant on Drobo (Drobo Apps > Dropbear), ssh compliant on client
-
 
 [top](#general)
 
