@@ -15,13 +15,13 @@
 ##
 ##	Subcommands:
 ##
-##	help      (base subcommand) Display help message, supports single term filtering.
+##	help     (base subcommand) Display help message, supports single term filtering.
 ##
-##	ls, list  (base subcommand) Display non-base subcommands.
+##	manual   (base subcommand) Display this manual.
 ##
-##	manual    (base subcommand) Display this manual.
+##	version  (base subcommand) Display version information.
 ##
-##	version   (base subcommand) Display version information.
+##	list  List repositories on Drobo.
 ##
 ## EXPECTATIONS
 ##
@@ -63,6 +63,7 @@
 
 # Save script name
 SELF="${0}"
+SEMVER_STRING="1.0.0-alpha.20261107001"  # See URL: https://semver.org/
 
 
 # Required Sources
@@ -80,23 +81,26 @@ source droboID.sh  # Contains Drobo system and user identification, not part of 
 
 main () {
 	# Description: Main control flow of program
-	# Args:
-	#   ${1} : Sub-command
+	# Arguments:
+	#   ${1} : Subcommand
 	#   ${2} : File system friendly name of repo to create
-	# Return:
-	#   0 : (normal) Git repo     setup on local host and Drobo
-	#   1 : ERROR:   Git repo NOT setup on local host, but repo     setup on Drobo
-	#   2 : ERROR:   Git repo     setup on local host, but repo NOT setup on Drobo
-	#   3 : ERROR:   Git repo NOT setup on local host, and repo NOT setup on Drobo
-	#   4 : ERROR:   Incorrect [sub-command] usage, or invalid environment
-	# Use cases (sub-commands):
+	# Use cases (subcommands):
 	#   help   : [1-2 args] ...
 	#   clone  : [2 args] ...
 	#   init   : [2 args] ...
 	#   mirror : [2 args] ...
 	#   remote : [2 args] ...
+	# Return:
+	#   0 : (normal) Git repo     setup on local host and Drobo
+	#   1 : ERROR:   Git repo NOT setup on local host, but repo     setup on Drobo
+	#   2 : ERROR:   Git repo     setup on local host, but repo NOT setup on Drobo
+	#   3 : ERROR:   Git repo NOT setup on local host, and repo NOT setup on Drobo
+	#   4 : ERROR:   Incorrect [subcommand] usage, or invalid environment
 
 	# Set up working set
+	set_up_environment
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
 	subcommand="${1}"
 	shift
 	# Core actions
@@ -108,33 +112,36 @@ main () {
 	# fi
 	# Perform subcommand
 	case "${subcommand}" in
-		help )     # Display this help message supports single term filtering
+		help )     # (base subcommand) Display this help message, supports single term filtering.
 			searchTerm="${1}"
 			shift
 			usage "${searchTerm}"
 			;;
-		manual )   # Display full manual
-			:
+		manual )   # (base subcommand) Display full manual.
+			manual
 			;;
-		list )     # List repositories on Drobo
-			:
+		version )  # (base subcommand) Display version information.
+			version_info
 			;;
-		clone )    # Clone repository that exists on Drobo but does not exist on local system
+		list )     # List repositories on Drobo.
+			: list_drobo_repos
+			;;
+		clone )    # Clone repository that exists on Drobo but does not exist on local system.
 			repoSlug="${1}"
 			shift
-			subcommandClone "${repoSlug}"
+			clone_drobo_repo "${repoSlug}"
 			;;
-		init )     # Initialize repository that does not exist on Drobo and does not exist on local system
+		init )     # Initialize repository that does not exist on Drobo and does not exist on local system.
 			repoSlug="${1}"
 			shift
 			subcommandInit "${repoSlug}"
 			;;
-		mirror )   # Mirror repository that does exist on local system but does not exist on Drobo
+		mirror )   # Mirror repository that does exist on local system but does not exist on Drobo.
 			repoSlug="${1}"
 			shift
 			subcommandMirror "${repoSlug}"
 			;;
-		remote )   # Add Drobo as remote for repository that does exist on local system and does exist on Drobo
+		remote )   # Add Drobo as remote for repository that does exist on local system and does exist on Drobo.
 			repoSlug="${1}"
 			shift
 			subcommandRemote "${repoSlug}"
@@ -142,19 +149,21 @@ main () {
 		* )
 			# Default: Blank or unknown subcommand, report error if unknown subcommand
 			# Note: Lack of comment on same line as case, default action will not be displayed by usage or ls subcommand
-			usage
-			if [[ -n "${subcommand}" ]] ; then
-				errorExit "ERROR: Unknown subcommand: ${subcommand}" 4
+			if [[ -z "${subcommand}" ]] ; then  # Blank subcommand
+				usage
+			else
+				exit_error "ERROR: Unknown subcommand: ${subcommand}" 2
 			fi
 			;;
 	esac
-	return ${?}
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
 usage () {
 	# Description: Generate and display usage
-	# References: Albing, C., JP Vossen. bash Idioms. O'Reilly. 2022.
+	# References:
+	#   - Albing, C., JP Vossen. bash Idioms. O'Reilly. 2022.
 	# Arguments:
 	#   ${1} : (Optional) Search term
 	# Return:
@@ -162,52 +171,189 @@ usage () {
 	#   1+ : ERROR
 
 	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
 	searchTerm="${1}"
 	shift
 	# Core actions
 	(
-		echo $( basename "${SELF}" ) 'Usage:'
-		egrep '\)[[:space:]]+# ' "${SELF}" | tr -s '\t'
-	) | grep "${searchTerm:-.}" | less
+		echo "${SELF##*/}" 'Usage:'
+		egrep '[[:space:]]\)[[:space:]]+#[[:space:]]' "${SELF}" | tr -s '\t' | sort
+	) | grep -i "${searchTerm:-.}" | less
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
-errorExit () {
-	# Description: Output ${1} (error message) to stderr and exit with ${2} (error status).
+manual () {
+	# Description: Display full manual
 	# Arguments:
-	#   ${1} : Error message to write
-	#   ${2} : (Optional) Error status to exit with
+	#   (none)
 	# Return:
 	#   0  : (normal)
 	#   1+ : ERROR
+
+	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
+	# Core actions
+	# Developer Note: Ignore lines that incorporate "${SELF##*/}"
+	grep '[#][#]' "${SELF}" | grep -v 'SELF' | less
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
+}
+
+
+version_info () {
+	# Description: Output version information.
+	# Arguments:
+	#   (none)
+	# Return:
+	#   0  : (normal).
+	#   1+ : ERROR.
+
+	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
+	# Core actions
+	echo "${SELF##*/}" "${SEMVER_STRING}"
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
+}
+
+
+set_up_environment () {
+	# Description: Set up environment.
+	# Arguments:
+	#   (none)
+	# Return:
+	#   0  : (normal).
+	#   1+ : ERROR.
+
+	# Set up working set
+	# Core actions
+	: ${reportError:=echo}
+	: ${reportWarning:=echo}
+	: ${reportCaution:=:}
+	: ${reportInformation:=:}
+	: ${reportTelemetry:=:}
+	: ${reportDebug:=:}
+	: ${TMPDIR:=/tmp}
+}
+
+
+exit_error () {
+	# Description: Output ${1} (error message) to stderr and exit with ${2} (error status).
+	# Arguments:
+	#   ${1} : Error message to write.
+	#   ${2} : (Optional) Error status to exit with.
+	# Return:
+	#   0  : (normal).
+	#   1+ : ERROR.
 
 	# Set up working set
 	errorStatus=1
 	errorMessage="${1}"
 	shift
 	# Core actions
-	echo "${errorMessage}" >&2
+	"${reportError}" '[!] ERROR:' "${errorMessage}" >&2
 	if [[ -n "${1}" ]] ; then
 		errorStatus="${1}"
 	fi
-	cleanUpArtifacts
 	exit "${errorStatus}"
 }
 
 
-warningReport () {
-	# Description: Output ${1} (warning message) to stderr, but DO NOT exit.
+report_warning () {
+	# Description: Output ${1} (warning message) to stderr as warning.
 	# Arguments:
-	#   ${1} : Warning message to write
+	#   ${1} : Warning message to write.
 	# Return:
-	#   0  : (normal)
-	#   1+ : ERROR
+	#   0  : (normal).
+	#   1+ : ERROR.
 
 	# Set up working set
 	warningMessage="${1}"
 	shift
 	# Core actions
-	echo "${warningMessage}" >&2
+	"${reportWarning}" '[!] WARNING:' "${warningMessage}" >&2
+}
+
+
+report_caution () {
+	# Description: Output ${1} (caution message) to stderr as caution.
+	# Arguments:
+	#   ${1} : Caution message to write.
+	# Return:
+	#   0  : (normal).
+	#   1+ : ERROR.
+
+	# Set up working set
+	cautionMessage="${1}"
+	shift
+	# Core actions
+	"${reportCaution}" '[^] CAUTION:' "${cautionMessage}" >&2
+}
+
+
+report_information () {
+	# Description: Output ${1} (information message) to stderr as information.
+	# Arguments:
+	#   ${1} : Information message to write.
+	# Return:
+	#   0  : (normal).
+	#   1+ : ERROR.
+
+	# Set up working set
+	informationMessage="${1}"
+	shift
+	# Core actions
+	"${reportInformation}" '[-] INFO:' "${informationMessage}" >&2
+}
+
+
+report_complete () {
+	# Description: Output ${1} (completion message) to stderr as information.
+	# Arguments:
+	#   ${1} : Completion message to write.
+	# Return:
+	#   0  : (normal).
+	#   1+ : ERROR.
+
+	# Set up working set
+	completionMessage="${1}"
+	shift
+	# Core actions
+	"${reportInformation}" '[+] INFO:' "${completionMessage}" >&2
+}
+
+
+report_telemetry () {
+	# Description: Output ${1} (telemetry message) to stderr as telemetry.
+	# Arguments:
+	#   ${1} : Telemetry message to write.
+	# Return:
+	#   0  : (normal).
+	#   1+ : ERROR.
+
+	# Set up working set
+	telemetryMessage="${1}"
+	shift
+	# Core actions
+	"${reportTelemetry}" '[.] TELEMETRY:' "${SELF##*/}::${telemetryMessage}" >&2
+}
+
+
+report_debug () {
+	# Description: Output ${1} (debug message) to stderr as debug.
+	# Arguments:
+	#   ${1} : Debug message to write.
+	# Return:
+	#   0  : (normal).
+	#   1+ : ERROR.
+
+	# Set up working set
+	debugMessage="${1}"
+	shift
+	# Core actions
+	"${reportDebug}" '[.] DEBUG:' "${debugMessage}" >&2
 }
 
 
@@ -219,6 +365,10 @@ isValidEnvironment () {
 	#   0 : VALID   environment
 	#   1 : INVALID environment
 
+	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
+	# Core actions
 	# isInRangeInt 1 2 $#
 	# if (( 0 != ${?} )) ; then  # Invalid number of command line arguments
 	# 	return 1
@@ -263,10 +413,11 @@ isValidEnvironment () {
 	if (( 0 != ${?} )) ; then  # Invalid
 		return 1
 	fi
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
-subcommandClone () {
+clone_drobo_repo () {
 	# Description: Clone an existing repo from the Drobo to the local host
 	# Args:
 	#   ${1} : File system friendly name of repo to clone from the Drobo
@@ -276,15 +427,19 @@ subcommandClone () {
 	#   3 : ERROR:   Git repo NOT setup on local host, and repo NOT found on Drobo
 	#   4 : ERROR:   Incorrect sub-command usage
 
-	## Correct Usage
+	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
+	# Core actions
+	# Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
-	## Actions on Drobo
+	#  Actions on Drobo
 	echo "[on Drobo]"
 	:  # Placeholder, syntactic NOP
-	## Actions on local host
+	#  Actions on local host
 	echo "[on localhost]"
 	droboGitClone "${1}"
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
@@ -295,6 +450,7 @@ subcommandClone () {
 	if (( 0 != ${?} )) ; then  # ERROR: ...
 		return 1
 	fi
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
@@ -308,18 +464,22 @@ subcommandInit () {
 	#   3 : ERROR:   Git repo NOT setup on local host, and repo NOT setup on Drobo
 	#   4 : ERROR:   Incorrect sub-command usage
 
-	## Correct Usage
+	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
+	# Core actions
+	# Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
-	## Actions on Drobo
+	# Actions on Drobo
 	echo "[on Drobo]"
 	droboSSHgitInit "${1}"
 	if (( 0 != ${?} )) ; then  # ERROR: ...
 		return 3
 	fi
-	## Actions on local host
+	# Actions on local host
 	echo "[on localhost]"
 	git init
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
@@ -329,6 +489,7 @@ subcommandInit () {
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
@@ -342,18 +503,22 @@ subcommandMirror () {
 	#   3 : ERROR:   Git repo NOT setup on local host, and repo NOT setup on Drobo
 	#   4 : ERROR:   Incorrect sub-command usage
 
-	## Correct Usage
+	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
+	# Core actions
+	# Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
 	fi
-	## Actions on Drobo
+	# Actions on Drobo
 	echo "[on Drobo]"
 	droboSSHgitInit "${1}"
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 3
 	fi
-	## Actions on local host
+	# Actions on local host
 	echo "[on localhost]"
 	droboGitRemoteAddConfig "${DROBO_GIT_NAME}"
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
@@ -363,6 +528,7 @@ subcommandMirror () {
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 3
 	fi
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
@@ -370,9 +536,11 @@ subcommandRemote () {
 	# Description: ...
 
 	# Set up working set
-	:
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
 	# Core actions
 	:
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
@@ -385,7 +553,11 @@ droboSSHgitInit () {
 	#   2 : ERROR:   Git repo NOT setup on Drobo
 	#   4 : ERROR:   Incorrect sub-command usage
 
-	## Correct Usage
+	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
+	# Core actions
+	# Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
@@ -406,6 +578,7 @@ droboSSHgitInit () {
 			return 2
 			;;
 	esac
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
@@ -418,7 +591,11 @@ droboGitClone () {
 	#   1 : ERROR:   Git repo NOT setup on local host
 	#   4 : ERROR:   Incorrect sub-command usage
 
-	## Correct Usage
+	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
+	# Core actions
+	# Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
@@ -428,6 +605,7 @@ droboGitClone () {
 		echo "ERROR: Failed to clone repo from Drobo" >&2
 		return 1
 	fi
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
@@ -440,7 +618,11 @@ droboGitRemoteAddConfig () {
 	#   1 : ERROR:   Git repo NOT setup on local host
 	#   4 : ERROR:   Incorrect sub-command usage
 
-	## Correct Usage
+	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
+	# Core actions
+	# Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
@@ -453,6 +635,7 @@ droboGitRemoteAddConfig () {
 	if (( 0 != ${?} )) ; then  # ERROR: Pass Back
 		return 1
 	fi
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
@@ -465,7 +648,11 @@ droboGitConfig () {
 	#   1 : ERROR:   Git repo NOT setup on local host
 	#   4 : ERROR:   Incorrect sub-command usage
 
-	## Correct Usage
+	# Set up working set
+	report_telemetry "${FUNCNAME[0]}()"
+	report_debug "${SELF##*/}::${FUNCNAME[0]}(${*})"
+	# Core actions
+	# Correct Usage
 	isInRangeInt 1 1 $#
 	if (( 0 != ${?} )) ; then  # Invalid number of arguments
 		return 4
@@ -475,8 +662,19 @@ droboGitConfig () {
 		echo "ERROR: Failed to configure repo on local host" >&2
 		return 1
 	fi
+	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
 
-# Call main()
-main "${@}"
+# Developer Note: This script supports running as a script like normal and sourcing as a library.
+# 1. Change the below variable name to a unique ID for this script.
+#    - Recommendation: Change "_THIS_" to the name of this scirpt
+#    - E.g. ${source__THIS__as_library} --> ${source_droboGit_as_library}
+# 2. Assign a value to the uniquely named variable in the script you want to source this library from.
+#    - E.g. source_droboGit_as_library=y
+# 3. Source this script in the other script referencing this script as a library
+#    - E.g. source droboGit.sh
+# NOTE: bash does not have the concept of namespaces, name collisions will overwrite previous assignments when sourced.
+if [[ -z ${source_droboGit_as_library} ]] ; then
+	main "${@}"
+fi
