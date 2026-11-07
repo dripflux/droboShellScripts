@@ -13,7 +13,7 @@
 
 ## Overview
 
-Shell scripts for initializing and cloning Git repos on a Drobo from a host.
+Shell scripts for initializing and cloning Git repositories (repos) on a Drobo from a host.
 
 **Dependencies**
 
@@ -42,7 +42,7 @@ To the extent possible the subcommand is mapped to the same Git subcommand.
 - (init) initializing a new repo on the Drobo;
 - (clone) cloning a repo that already exists on the Drobo;
 - (mirror) creating a new repo on the Drobo from an already existing repo on the host; and
-- (remote) adding a repo on the Drobo as a remote from an already existing repo on the host
+- (remote) adding a repo on the Drobo as a remote for an already existing repo on the host
 
 The `droboGit.sh` subcommands are simplified versions of the Git subcommands, e.g. `git init`, `git clone`.
 As such the implementations of the subcommands follow the default Git versions without extra options.
