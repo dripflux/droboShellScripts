@@ -1,16 +1,64 @@
 #!/usr/bin/env bash
 
 
-# Author: Drip.Flux
-# Description: Client side (on local host) script for creating bare Git repo on Drobo, and cloning repo on local host.
-#   Part of droboShellScripts project.
-# Dependencies:
-#   - Drobo Dashboard Admin Account
-#   - Drobo App > Git SCM
-#   - Drobo Apps > Bash : sh (default shell on Drobo) does not support export -f
-#   - ssh : ssh compliant on Drobo (Drobo Apps > Dropbear), ssh compliant on client
-# Expectations:
-#   - $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
+## NAME
+##	droboGit.sh  Set up Git repo on local host and remote Drobo
+##
+## SYNOPSIS
+##	droboGit.sh help
+##
+##	??? ...
+##
+## DESCRIPTION
+##	Client side (on local host) script for setting up and linking Git repo on remote Drobo, and repo on local host.
+##	Part of the droboShellScripts project.
+##
+##	Subcommands:
+##
+##	help      (base subcommand) Display help message, supports single term filtering.
+##
+##	ls, list  (base subcommand) Display non-base subcommands.
+##
+##	manual    (base subcommand) Display this manual.
+##
+##	version   (base subcommand) Display version information.
+##
+## EXPECTATIONS
+##
+##	- $DROBO_REPOS_DIR_PATH exists and user context has read, write, and execute permissions
+##
+## EXPERT
+##	The following environment variables can be set to affect execution:
+##
+##	- reportError       : Defaults to "echo" if not set, command to use when reporting error messages
+##	- reportWarning     : Defaults to "echo" if not set, command to use when reporting warning messages
+##	- reportCaution     : Defaults to ":" if not set, command to use when reporting caution messages
+##	- reportInformation : Defaults to ":" if not set, command to use when reporting information and completion messages
+##	- reportTelemetry   : Defaults to ":" if not set, command to use when reporting telemetry messages
+##	- reportDebug       : Defaults to ":" if not set, command to use when reporting debug messages
+##
+## EXIT STATUS
+##	0  : (normal) On success
+##	1+ : ERROR
+##	2  : ERROR: Invalid usage
+##
+## DEPENDENCIES
+##	echo(0|1) : Built-in or POSIX echo
+##	egrep(1)  : POSIX egrep
+##	grep(1)   : POSIX grep
+##	less(1)   : GNU (common UNIX) less
+##	sort(1)   : POSIX sort
+##	ssh(1)    : RFC 4250 - RFC 4256
+##	tr(1)     : POSIX tr
+##
+## DROBO DEPENDENCIES
+##	- Drobo Dashboard Admin Account
+##	- Drobo Apps > Bash
+##	- Drobo Apps > Git SCM
+##	- Drobo Apps > Dropbear
+##
+## AUTHORS
+##	Drip.Flux.
 
 
 # Save script name
@@ -33,7 +81,8 @@ source droboID.sh  # Contains Drobo system and user identification, not part of 
 main () {
 	# Description: Main control flow of program
 	# Args:
-	#   ${1} : File system friendly name of repo to create
+	#   ${1} : Sub-command
+	#   ${2} : File system friendly name of repo to create
 	# Return:
 	#   0 : (normal) Git repo     setup on local host and Drobo
 	#   1 : ERROR:   Git repo NOT setup on local host, but repo     setup on Drobo
